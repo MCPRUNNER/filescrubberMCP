@@ -1,0 +1,47 @@
+{{~ # Employee Report Template - Processes company data fetched via URI ~}}
+{{~ # Expected JSON structure: company, employees[], founded, headquarters ~}}
+
+================================================================================
+                    {{ company | string.upcase }} 
+================================================================================
+
+Company Overview
+----------------
+Founded:      {{ founded }}
+Headquarters: {{ headquarters.city }}, {{ headquarters.state }} {{ headquarters.zipCode }}
+              {{ headquarters.country }}
+
+Employee Directory
+------------------
+Total Employees: {{ employees.size }}
+
+{{ for employee in employees ~}}
+[{{ employee.id }}] {{ employee.name }}
+────────────────────────────────────────────────────────────────
+  Department: {{ employee.department }}
+  Position:   {{ employee.position }}
+  Salary:     ${{ employee.salary }}
+  Skills:     {{ employee.skills | array.join ", " }}
+
+{{ end ~}}
+
+Statistics
+----------
+{{ total_salary = 0 }}
+{{ for emp in employees }}{{ total_salary = total_salary + emp.salary }}{{ end ~}}
+Total Payroll: ${{ total_salary }}
+Average Salary: ${{ total_salary / employees.size | math.round }}
+
+All Skills Inventory
+---------------------
+{{ all_skills = [] }}
+{{ for employee in employees }}
+  {{ for skill in employee.skills }}
+    {{ all_skills = all_skills | array.add skill }}
+  {{ end }}
+{{ end ~}}
+{{ all_skills | array.uniq | array.sort | array.join ", " }}
+
+================================================================================
+Report generated for data fetched from GitHub repository
+================================================================================

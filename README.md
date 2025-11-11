@@ -2,6 +2,47 @@
 
 A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 9 with support for HTTP and Stdio transports.
 
+## Notice
+
+This project is currently in active development and may undergo significant changes. Features and APIs are subject to change, and breaking changes may occur in future releases. Use at your own discretion.
+
+## Summary
+
+**FileScrubber MCP Server** is a powerful, enterprise-ready MCP server that extends AI assistants with comprehensive file system operations, data parsing, and template rendering capabilities. It enables AI models to interact with local and remote files, query structured data across multiple formats, transform content, and generate documentation through Scriban templates.
+
+### Key Capabilities
+
+- **📁 File System Operations**: Read, write, and list files with full metadata including timestamps, sizes, and attributes. Supports recursive directory scanning and flexible search patterns.
+
+- **🔍 Multi-Format Parsing**: Query and extract data from JSON, XML, YAML, CSV, and Excel files using industry-standard query languages (JSONPath for JSON/YAML/CSV/Excel, XPath for XML).
+
+- **🔄 Data Transformation**: Transform XML documents using XSLT stylesheets with optional output to files.
+
+- **📝 Template Processing**: Render Scriban (.sbn) templates with JSON data to generate reports, documentation, or any text-based output. Process templates to files or return as strings.
+
+- **🌐 HTTP Client Operations**: Execute HTTP requests (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) with custom headers and JSON payloads.
+
+- **🔌 Flexible Transport**: Supports both HTTP and Stdio transports for seamless integration with various MCP clients and AI platforms.
+
+### Ideal Use Cases
+
+- **Data Analysis**: Query and extract information from structured data files (JSON, XML, YAML, CSV, Excel)
+- **Report Generation**: Create formatted reports from file listings, data queries, or any JSON data using Scriban templates
+- **File Management**: Automate file operations, directory scanning, and content manipulation
+- **Data Transformation**: Convert between formats, transform XML with XSLT, and process structured data
+- **API Integration**: Make HTTP requests to REST APIs and process responses
+- **Documentation**: Generate documentation from code, data, or file metadata
+
+### Architecture
+
+Built on **.NET 9** with a clean, modular architecture:
+
+- **Service Layer**: Business logic for file, parser, template, and URI operations
+- **Tools Layer**: MCP tool implementations exposing services to AI models
+- **Dependency Injection**: Full DI support for testability and maintainability
+- **Structured Logging**: Comprehensive logging with Serilog for monitoring and debugging
+- **Comprehensive Testing**: 84 unit tests covering services and tools with edge cases
+
 ## Features
 
 ### 🗂️ File Operations
@@ -176,7 +217,7 @@ Lists files in a directory with metadata.
 
 ### Parser Tools
 
-#### `fscrub_parse_json`
+#### `fscrub_parser_search_json`
 
 Search JSON files using JSONPath.
 
@@ -187,7 +228,7 @@ Search JSON files using JSONPath.
 - `indented` (bool, optional) - Format output (default: true)
 - `showKeyPaths` (bool, optional) - Include paths in results (default: false)
 
-#### `fscrub_parse_xml`
+#### `fscrub_parser_search_xml`
 
 Search XML files using XPath.
 
@@ -198,7 +239,7 @@ Search XML files using XPath.
 - `indented` (bool, optional) - Format output (default: true)
 - `showKeyPaths` (bool, optional) - Include paths in results (default: false)
 
-#### `fscrub_parse_yaml`
+#### `fscrub_parser_search_yaml`
 
 Search YAML files using JSONPath.
 
@@ -209,7 +250,7 @@ Search YAML files using JSONPath.
 - `indented` (bool, optional) - Format output (default: true)
 - `showKeyPaths` (bool, optional) - Include paths in results (default: false)
 
-#### `fscrub_parse_csv`
+#### `fscrub_parser_search_csv`
 
 Search CSV files using JSONPath.
 
@@ -220,7 +261,7 @@ Search CSV files using JSONPath.
 - `hasHeaderRecord` (bool, optional) - First row is header (default: true)
 - `ignoreBlankLines` (bool, optional) - Ignore blank lines (default: true)
 
-#### `fscrub_parse_excel`
+#### `fscrub_parser_search_excel`
 
 Search Excel files using JSONPath.
 
@@ -229,7 +270,7 @@ Search Excel files using JSONPath.
 - `excelFilePath` (string) - Path to Excel file (.xlsx)
 - `jsonPath` (string) - JSONPath query (e.g., "$.Sheet1[*].ColumnName")
 
-#### `fscrub_transform_xml_xslt`
+#### `fscrub_parser_transform_xml`
 
 Transform XML using XSLT stylesheet.
 
@@ -241,7 +282,7 @@ Transform XML using XSLT stylesheet.
 
 ### Scriban Template Tools
 
-#### `scriban_process_template`
+#### `fscrub_scriban_process_template`
 
 Process a Scriban template with JSON data and save to file.
 
@@ -261,7 +302,7 @@ Process a Scriban template with JSON data and save to file.
 }
 ```
 
-#### `scriban_render_template`
+#### `fscrub_scriban_render_template`
 
 Render a Scriban template and return the output.
 
@@ -272,26 +313,71 @@ Render a Scriban template and return the output.
 
 ### URI Tools
 
-#### `fscrub_parse_uri`
+#### `fscrub_uri_get`
 
-Parse and validate URIs.
-
-**Parameters:**
-
-- `uri` (string) - URI to parse
-
-#### `fscrub_build_uri`
-
-Build a URI from components.
+Send a GET request to the specified URI.
 
 **Parameters:**
 
-- `scheme` (string) - URI scheme (e.g., "https")
-- `host` (string) - Host name
-- `port` (int, optional) - Port number
-- `path` (string, optional) - Path
-- `query` (string, optional) - Query string
-- `fragment` (string, optional) - Fragment
+- `uri` (string) - URI to send GET request to
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_post`
+
+Send a POST request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send POST request to
+- `jsonBody` (string, optional) - JSON body for the request
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_put`
+
+Send a PUT request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send PUT request to
+- `jsonBody` (string, optional) - JSON body for the request
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_patch`
+
+Send a PATCH request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send PATCH request to
+- `jsonBody` (string, optional) - JSON body for the request
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_delete`
+
+Send a DELETE request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send DELETE request to
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_head`
+
+Send a HEAD request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send HEAD request to
+- `headersJson` (string, optional) - JSON object of headers
+
+#### `fscrub_uri_options`
+
+Send an OPTIONS request to the specified URI.
+
+**Parameters:**
+
+- `uri` (string) - URI to send OPTIONS request to
+- `headersJson` (string, optional) - JSON object of headers
 
 ## Template Examples
 
@@ -321,7 +407,7 @@ fscrub_file_list("C:\\Projects", "*.cs", true)
 2. Process template with output:
 
 ```json
-scriban_process_template(
+fscrub_scriban_process_template(
   "Examples/file_list_report.sbn",
   <json_from_step_1>,
   "report.md"
