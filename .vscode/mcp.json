@@ -1,0 +1,24 @@
+{
+  "servers": {
+    "filescrubberStdioMCP": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--no-build",
+        "--project",
+        "c:\\Users\\U00001\\source\\repos\\MCP\\filescrubberMCP\\filescrubberMCP.csproj"
+      ],
+      "env": {
+        "FILESCRUBBER_MCP_TRANSPORT": "Stdio"
+      }
+    },
+    "filescrubberMCP": {
+      "type": "http",
+      "url": "http://localhost:5000/mcp",
+      "headers": {
+        "Content-Type": "application/json, text/event-stream",
+        "Accept": "application/json, text/event-stream"
+      }
+    }
+  }
+}
