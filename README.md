@@ -1,4 +1,4 @@
-# FileScrubber MCP Server
+# filescrubberMCP (MCP Server)
 
 A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 9 with support for HTTP and Stdio transports.
 
@@ -8,7 +8,7 @@ This project is currently in active development and may undergo significant chan
 
 ## Summary
 
-**FileScrubber MCP Server** is a powerful, enterprise-ready MCP server that extends AI assistants with comprehensive file system operations, data parsing, and template rendering capabilities. It enables AI models to interact with local and remote files, query structured data across multiple formats, transform content, and generate documentation through Scriban templates.
+**FileScrubberMCP** is a powerful, enterprise-ready MCP server that extends AI assistants with comprehensive file system operations, data parsing, and template rendering capabilities. It enables AI models to interact with local and remote files, query structured data across multiple formats, transform content, and generate documentation through Scriban templates.
 
 ### Key Capabilities
 
@@ -61,7 +61,7 @@ Support for multiple file formats with powerful query capabilities:
 - **YAML** - JSONPath queries on YAML data
 - **CSV** - JSONPath queries with header support
 - **Excel (.xlsx)** - Multi-worksheet support with JSONPath queries
-- **XSLT** - XML transformation capabilities
+- **XSLT** - XML transformation capabilities (transform XML documents using XSLT stylesheets with optional file output)
 
 ### 📝 Scriban Template Processing
 
@@ -156,6 +156,7 @@ Or use the provided PowerShell scripts:
 
 - `FILESCRUBBER_MCP_TRANSPORT` - Set to `"Http"` or `"Stdio"` (default: `"Http"`)
 - `FILESCRUBBER_MCP_LOG_DIR` - Custom directory for log files (default: `Logs` in application directory)
+- `FILESCRUBBER_MCP_ROOT_DIR` - Root directory for file operations. When set, all relative file paths will be resolved relative to this directory. Useful for Docker deployments to set a working directory. (default: current working directory)
 
 ## MCP Tools
 

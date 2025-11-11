@@ -11,4 +11,10 @@ public interface IAppConfigurationProvider
     /// <param name="name">The name of the connection string</param>
     /// <returns>The connection string</returns>
     string GetConnectionString(string name);
+
+    /// <summary>
+    /// Gets the root directory for file operations
+    /// </summary>
+    /// <returns>The root directory path</returns>
+    string GetRootDirectory();
 }

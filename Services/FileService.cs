@@ -177,6 +177,7 @@ public class FileService : IFileService
 
     /// <summary>
     /// Normalizes a file path to use the correct directory separator for the current platform
+    /// and resolves it relative to the configured root directory if it's a relative path
     /// </summary>
     /// <param name="path">The path to normalize</param>
     /// <returns>The normalized path</returns>
@@ -198,6 +199,14 @@ public class FileService : IFileService
             normalized = normalized.Replace(
                 $"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}",
                 Path.DirectorySeparatorChar.ToString());
+        }
+
+        // If the path is relative, resolve it relative to the root directory
+        if (!Path.IsPathRooted(normalized))
+        {
+            var rootDirectory = _configurationProvider.GetRootDirectory();
+            normalized = Path.Combine(rootDirectory, normalized);
+            _logger.LogDebug("Resolved relative path to: {NormalizedPath}", normalized);
         }
 
         return normalized;

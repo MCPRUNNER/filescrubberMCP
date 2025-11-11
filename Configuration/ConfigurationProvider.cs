@@ -11,6 +11,7 @@ public class AppConfigurationProvider : IAppConfigurationProvider
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<AppConfigurationProvider> _logger;
+    private readonly string _rootDirectory;
 
     /// <summary>
     /// Initializes a new instance of the AppConfigurationProvider
@@ -23,6 +24,12 @@ public class AppConfigurationProvider : IAppConfigurationProvider
     {
         _configuration = configuration;
         _logger = logger;
+
+        // Get root directory from environment variable or use current directory
+        _rootDirectory = Environment.GetEnvironmentVariable("FILESCRUBBER_MCP_ROOT_DIR")
+                        ?? Directory.GetCurrentDirectory();
+
+        _logger.LogInformation("Root directory configured as: {RootDirectory}", _rootDirectory);
     }
 
     /// <summary>
@@ -41,5 +48,14 @@ public class AppConfigurationProvider : IAppConfigurationProvider
         }
 
         return connectionString;
+    }
+
+    /// <summary>
+    /// Gets the root directory for file operations
+    /// </summary>
+    /// <returns>The root directory path</returns>
+    public string GetRootDirectory()
+    {
+        return _rootDirectory;
     }
 }

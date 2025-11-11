@@ -25,6 +25,8 @@ COPY --from=build /app/publish .
 # Set environment variables with defaults (these should be overridden at runtime)
 ENV TEMPLATE_MCP_TRANSPORT="Http"
 ENV ASPNETCORE_URLS="http://+:3001"
+ENV FILESCRUBBER_MCP_ROOT_DIR="/app/Data"
+ENV FILESCRUBBER_MCP_LOG_DIR="/app/Logs"
 
 # Expose the MCP server port
 EXPOSE 3001
