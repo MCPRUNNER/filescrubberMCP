@@ -1,0 +1,125 @@
+# {{ company }} - Employee Report
+
+---
+
+## Company Information
+
+- **Company Name:** {{ company }}
+- **Founded:** {{ founded }}
+- **Headquarters:** {{ headquarters.city }}, {{ headquarters.state }} {{ headquarters.zipCode }}, {{ headquarters.country }}
+- **Total Employees:** {{ employees.size }}
+
+---
+
+## Employee Directory
+
+{{ for employee in employees }}
+### {{ employee.name }} (ID: {{ employee.id }})
+
+- **Department:** {{ employee.department }}
+- **Position:** {{ employee.position }}
+- **Salary:** ${{ employee.salary }}
+- **Skills:** {{ employee.skills | array.join ", " }}
+
+{{ end }}
+
+---
+
+## Salary Statistics
+
+{{ total_salary = 0 }}
+{{ high_earner_count = 0 }}
+{{ for emp in employees }}
+  {{ total_salary = total_salary + emp.salary }}
+  {{ if emp.salary >= 90000 }}
+    {{ high_earner_count = high_earner_count + 1 }}
+  {{ end }}
+{{ end }}
+
+- **Total Payroll:** ${{ total_salary }}
+- **Average Salary:** ${{ (total_salary / employees.size) | math.round }}
+- **Employees Earning $90K+:** {{ high_earner_count }}
+
+{{ if high_earner_count > 0 }}
+### High Earners ($90,000+)
+{{ for emp in employees }}
+{{ if emp.salary >= 90000 }}
+- {{ emp.name }} - {{ emp.position }}: ${{ emp.salary }}
+{{ end }}
+{{ end }}
+{{ end }}
+
+---
+
+## Skills Inventory
+
+{{ all_skills = [] }}
+{{ for emp in employees }}
+  {{ for skill in emp.skills }}
+    {{ skill_found = false }}
+    {{ for existing in all_skills }}
+      {{ if existing == skill }}
+        {{ skill_found = true }}
+      {{ end }}
+    {{ end }}
+    {{ if !skill_found }}
+      {{ all_skills = all_skills | array.add skill }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+**Total Unique Skills:** {{ all_skills.size }}
+
+{{ for skill in all_skills | array.sort }}
+- **{{ skill }}**
+{{ end }}
+
+---
+
+## Department Breakdown
+
+### Engineering Department
+{{ eng_count = 0 }}
+{{ for emp in employees }}
+{{ if emp.department == "Engineering" }}
+{{ eng_count = eng_count + 1 }}
+- **{{ emp.name }}** - {{ emp.position }} (${{ emp.salary }})
+  - Skills: {{ emp.skills | array.join ", " }}
+{{ end }}
+{{ end }}
+
+{{ if eng_count == 0 }}
+*No engineering employees found.*
+{{ end }}
+
+### Sales Department
+{{ sales_count = 0 }}
+{{ for emp in employees }}
+{{ if emp.department == "Sales" }}
+{{ sales_count = sales_count + 1 }}
+- **{{ emp.name }}** - {{ emp.position }} (${{ emp.salary }})
+  - Skills: {{ emp.skills | array.join ", " }}
+{{ end }}
+{{ end }}
+
+{{ if sales_count == 0 }}
+*No sales employees found.*
+{{ end }}
+
+---
+
+## Contact Information
+
+{{ if employees.size > 0 }}
+For employee inquiries, please contact:
+
+{{ for employee in employees }}
+- **{{ employee.name }}** - {{ employee.department }} Department
+{{ end }}
+{{ end }}
+
+---
+
+*Report generated from: https://github.com/MCPRUNNER/filescrubberMCP/blob/main/Examples/medium.json*
+
+*Template: company_employee_report.sbn*

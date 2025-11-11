@@ -1,0 +1,72 @@
+{{~##
+  Employee Report Template
+  Processes company employee data from medium.json
+  Data extracted via fscrub_uri_get from:
+  https://github.com/MCPRUNNER/filescrubberMCP/blob/main/Examples/medium.json
+##~}}
+================================================================================
+                        {{ company | string.upcase }}
+================================================================================
+Founded: {{ founded }}
+Location: {{ headquarters.city }}, {{ headquarters.state }}, {{ headquarters.country }} {{ headquarters.zipCode }}
+
+--------------------------------------------------------------------------------
+                              EMPLOYEE DIRECTORY
+--------------------------------------------------------------------------------
+Total Employees: {{ employees | array.size }}
+
+{{ for employee in employees }}
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Employee #{{ employee.id }}                                                       │
+├──────────────────────────────────────────────────────────────────────────┤
+│ Name:        {{ employee.name }}{{ for i in (1..(30 - employee.name.size)) }} {{ end }}│
+│ Department:  {{ employee.department }}{{ for i in (1..(30 - employee.department.size)) }} {{ end }}│
+│ Position:    {{ employee.position }}{{ for i in (1..(30 - employee.position.size)) }} {{ end }}│
+│ Salary:      ${{ employee.salary | math.format "N0" }}{{ for i in (1..(25 - (employee.salary | math.format "N0" | string.size))) }} {{ end }}│
+│ Skills:      {{ employee.skills | array.join ", " }}{{ for i in (1..(30 - (employee.skills | array.join ", " | string.size))) }} {{ end }}│
+└──────────────────────────────────────────────────────────────────────────┘
+
+{{ end }}
+
+--------------------------------------------------------------------------------
+                           DEPARTMENT BREAKDOWN
+--------------------------------------------------------------------------------
+{{ departments = employees | array.group_by "department" }}
+{{ for dept in departments }}
+{{ dept.key }}:
+{{ for emp in dept }}  - {{ emp.name }} ({{ emp.position }})
+{{ end }}
+{{ end }}
+
+--------------------------------------------------------------------------------
+                              SALARY STATISTICS
+--------------------------------------------------------------------------------
+{{ salaries = employees | array.map "salary" }}
+Total Payroll:    ${{ salaries | array.sum | math.format "N0" }}
+Average Salary:   ${{ (salaries | array.sum) / (salaries | array.size) | math.format "N0" }}
+Highest Salary:   ${{ salaries | array.sort | array.last | math.format "N0" }}
+Lowest Salary:    ${{ salaries | array.sort | array.first | math.format "N0" }}
+
+--------------------------------------------------------------------------------
+                                 SKILLS MATRIX
+--------------------------------------------------------------------------------
+{{ all_skills = [] }}
+{{ for employee in employees }}
+  {{ for skill in employee.skills }}
+    {{ all_skills = all_skills | array.add skill }}
+  {{ end }}
+{{ end }}
+{{ unique_skills = all_skills | array.uniq | array.sort }}
+Unique Skills: {{ unique_skills | array.join ", " }}
+
+{{ for skill in unique_skills }}
+{{ skill }}:
+{{ for employee in employees }}
+  {{ if employee.skills | array.contains skill }}  - {{ employee.name }}
+  {{ end }}
+{{ end }}
+{{ end }}
+
+================================================================================
+                           END OF REPORT
+================================================================================
