@@ -44,30 +44,6 @@ Average Salary: $85000
 All Skills Inventory
 ---------------------
 
-
-  
-      
-    
-      
-    
-      
-    
-
-  
-      
-    
-      
-    
-      
-    
-
-  
-      
-    
-      
-    
-      
-    
 AWS, C#, CRM, Communication, Docker, JavaScript, Kubernetes, Negotiation, SQL
 
 ================================================================================
