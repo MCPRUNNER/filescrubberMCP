@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system apiVersion="v1">
+  <metadata>
+    <name>enterprise-system</name>
+    <version>2.5.1</version>
+    <created>2025-01-15T10:30:00Z</created>
+    <lastModified>2025-11-11T14:22:00Z</lastModified>
+    <tags>
+      <tag>production</tag>
+      <tag>critical</tag>
+      <tag>monitored</tag>
+    </tags>
+  </metadata>
+  
+  <configuration>
+    <database>
+      <primary>
+        <host>db-primary.example.com</host>
+        <port>5432</port>
+        <name>enterprise_db</name>
+        <ssl>true</ssl>
+        <poolSize>50</poolSize>
+        <timeout>30000</timeout>
+      </primary>
+      <replicas>
+        <replica region="us-west-2">
+          <host>db-replica-1.example.com</host>
+          <port>5432</port>
+        </replica>
+        <replica region="us-east-1">
+          <host>db-replica-2.example.com</host>
+          <port>5432</port>
+        </replica>
+      </replicas>
+    </database>
+    
+    <cache>
+      <redis enabled="true">
+        <nodes>
+          <node>redis-1.example.com:6379</node>
+          <node>redis-2.example.com:6379</node>
+          <node>redis-3.example.com:6379</node>
+        </nodes>
+        <ttl>3600</ttl>
+        <maxMemory>2gb</maxMemory>
+      </redis>
+    </cache>
+    
+    <services>
+      <service type="microservice">
+        <name>authentication-service</name>
+        <replicas>3</replicas>
+        <resources>
+          <cpu>500m</cpu>
+          <memory>512Mi</memory>
+          <storage>10Gi</storage>
+        </resources>
+        <endpoints>
+          <endpoint>/api/v1/login</endpoint>
+          <endpoint>/api/v1/logout</endpoint>
+          <endpoint>/api/v1/refresh</endpoint>
+        </endpoints>
+        <healthCheck>
+          <path>/health</path>
+          <interval>30</interval>
+          <timeout>5</timeout>
+          <retries>3</retries>
+        </healthCheck>
+      </service>
+      
+      <service type="microservice">
+        <name>user-service</name>
+        <replicas>5</replicas>
+        <resources>
+          <cpu>1000m</cpu>
+          <memory>1Gi</memory>
+          <storage>20Gi</storage>
+        </resources>
+        <endpoints>
+          <endpoint>/api/v1/users</endpoint>
+          <endpoint>/api/v1/users/{id}</endpoint>
+          <endpoint>/api/v1/users/{id}/profile</endpoint>
+        </endpoints>
+        <dependencies>
+          <dependency>authentication-service</dependency>
+          <dependency>database</dependency>
+        </dependencies>
+        <healthCheck>
+          <path>/health</path>
+          <interval>15</interval>
+          <timeout>3</timeout>
+          <retries>5</retries>
+        </healthCheck>
+      </service>
+      
+      <service type="microservice">
+        <name>notification-service</name>
+        <replicas>2</replicas>
+        <resources>
+          <cpu>250m</cpu>
+          <memory>256Mi</memory>
+          <storage>5Gi</storage>
+        </resources>
+        <endpoints>
+          <endpoint>/api/v1/notify/email</endpoint>
+          <endpoint>/api/v1/notify/sms</endpoint>
+          <endpoint>/api/v1/notify/push</endpoint>
+        </endpoints>
+        <queue type="rabbitmq">
+          <host>rabbitmq.example.com</host>
+          <vhost>/notifications</vhost>
+          <queues>
+            <queue>email</queue>
+            <queue>sms</queue>
+            <queue>push</queue>
+          </queues>
+        </queue>
+      </service>
+    </services>
+  </configuration>
+  
+  <monitoring>
+    <metrics>
+      <prometheus enabled="true">
+        <scrapeInterval>15s</scrapeInterval>
+        <endpoints>
+          <endpoint>/metrics</endpoint>
+        </endpoints>
+      </prometheus>
+      <grafana enabled="true">
+        <dashboards>
+          <dashboard>system-overview</dashboard>
+          <dashboard>service-health</dashboard>
+          <dashboard>performance</dashboard>
+        </dashboards>
+      </grafana>
+    </metrics>
+    
+    <logging>
+      <level>info</level>
+      <outputs>
+        <output>stdout</output>
+        <output>elasticsearch</output>
+      </outputs>
+      <elasticsearch>
+        <host>logs.example.com</host>
+        <index>enterprise-logs</index>
+        <retention>30d</retention>
+      </elasticsearch>
+    </logging>
+    
+    <alerts>
+      <alert severity="critical">
+        <name>high-error-rate</name>
+        <condition>error_rate &gt; 0.05</condition>
+        <channels>
+          <channel>slack</channel>
+          <channel>pagerduty</channel>
+        </channels>
+      </alert>
+      <alert severity="warning">
+        <name>high-cpu-usage</name>
+        <condition>cpu_usage &gt; 80</condition>
+        <channels>
+          <channel>slack</channel>
+        </channels>
+      </alert>
+      <alert severity="critical">
+        <name>low-disk-space</name>
+        <condition>disk_free &lt; 10</condition>
+        <channels>
+          <channel>slack</channel>
+          <channel>pagerduty</channel>
+          <channel>email</channel>
+        </channels>
+      </alert>
+    </alerts>
+  </monitoring>
+  
+  <security>
+    <authentication type="jwt">
+      <issuer>https://auth.example.com</issuer>
+      <audience>enterprise-api</audience>
+      <tokenExpiry>3600</tokenExpiry>
+      <refreshTokenExpiry>604800</refreshTokenExpiry>
+    </authentication>
+    
+    <authorization>
+      <rbac enabled="true">
+        <roles>
+          <role name="admin">
+            <permissions>
+              <permission>*</permission>
+            </permissions>
+          </role>
+          <role name="developer">
+            <permissions>
+              <permission>read</permission>
+              <permission>write</permission>
+              <permission>deploy</permission>
+            </permissions>
+          </role>
+          <role name="viewer">
+            <permissions>
+              <permission>read</permission>
+            </permissions>
+          </role>
+        </roles>
+      </rbac>
+    </authorization>
+    
+    <encryption>
+      <atRest>true</atRest>
+      <inTransit>true</inTransit>
+      <algorithm>AES-256-GCM</algorithm>
+    </encryption>
+  </security>
+</system>

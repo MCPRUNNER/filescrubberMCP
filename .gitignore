@@ -1,0 +1,27 @@
+## Build results
+bin/
+obj/
+
+## User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## IDE
+.vs/
+.idea/
+*.swp
+*.swo
+.vscode/
+## Logs
+Logs/*.txt
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Database files
+*.db
+*.db-shm
+*.db-wal

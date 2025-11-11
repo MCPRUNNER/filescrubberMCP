@@ -1,0 +1,187 @@
+{
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "enterprise-system",
+    "version": "2.5.1",
+    "created": "2025-01-15T10:30:00Z",
+    "lastModified": "2025-11-11T14:22:00Z",
+    "tags": ["production", "critical", "monitored"]
+  },
+  "configuration": {
+    "database": {
+      "primary": {
+        "host": "db-primary.example.com",
+        "port": 5432,
+        "name": "enterprise_db",
+        "ssl": true,
+        "poolSize": 50,
+        "timeout": 30000
+      },
+      "replicas": [
+        {
+          "host": "db-replica-1.example.com",
+          "port": 5432,
+          "region": "us-west-2"
+        },
+        {
+          "host": "db-replica-2.example.com",
+          "port": 5432,
+          "region": "us-east-1"
+        }
+      ]
+    },
+    "cache": {
+      "redis": {
+        "enabled": true,
+        "nodes": [
+          "redis-1.example.com:6379",
+          "redis-2.example.com:6379",
+          "redis-3.example.com:6379"
+        ],
+        "ttl": 3600,
+        "maxMemory": "2gb"
+      }
+    },
+    "services": [
+      {
+        "name": "authentication-service",
+        "type": "microservice",
+        "replicas": 3,
+        "resources": {
+          "cpu": "500m",
+          "memory": "512Mi",
+          "storage": "10Gi"
+        },
+        "endpoints": [
+          "/api/v1/login",
+          "/api/v1/logout",
+          "/api/v1/refresh"
+        ],
+        "healthCheck": {
+          "path": "/health",
+          "interval": 30,
+          "timeout": 5,
+          "retries": 3
+        }
+      },
+      {
+        "name": "user-service",
+        "type": "microservice",
+        "replicas": 5,
+        "resources": {
+          "cpu": "1000m",
+          "memory": "1Gi",
+          "storage": "20Gi"
+        },
+        "endpoints": [
+          "/api/v1/users",
+          "/api/v1/users/{id}",
+          "/api/v1/users/{id}/profile"
+        ],
+        "dependencies": ["authentication-service", "database"],
+        "healthCheck": {
+          "path": "/health",
+          "interval": 15,
+          "timeout": 3,
+          "retries": 5
+        }
+      },
+      {
+        "name": "notification-service",
+        "type": "microservice",
+        "replicas": 2,
+        "resources": {
+          "cpu": "250m",
+          "memory": "256Mi",
+          "storage": "5Gi"
+        },
+        "endpoints": [
+          "/api/v1/notify/email",
+          "/api/v1/notify/sms",
+          "/api/v1/notify/push"
+        ],
+        "queue": {
+          "type": "rabbitmq",
+          "host": "rabbitmq.example.com",
+          "vhost": "/notifications",
+          "queues": ["email", "sms", "push"]
+        }
+      }
+    ]
+  },
+  "monitoring": {
+    "metrics": {
+      "prometheus": {
+        "enabled": true,
+        "scrapeInterval": "15s",
+        "endpoints": ["/metrics"]
+      },
+      "grafana": {
+        "enabled": true,
+        "dashboards": ["system-overview", "service-health", "performance"]
+      }
+    },
+    "logging": {
+      "level": "info",
+      "outputs": ["stdout", "elasticsearch"],
+      "elasticsearch": {
+        "host": "logs.example.com",
+        "index": "enterprise-logs",
+        "retention": "30d"
+      }
+    },
+    "alerts": [
+      {
+        "name": "high-error-rate",
+        "condition": "error_rate > 0.05",
+        "severity": "critical",
+        "channels": ["slack", "pagerduty"]
+      },
+      {
+        "name": "high-cpu-usage",
+        "condition": "cpu_usage > 80",
+        "severity": "warning",
+        "channels": ["slack"]
+      },
+      {
+        "name": "low-disk-space",
+        "condition": "disk_free < 10",
+        "severity": "critical",
+        "channels": ["slack", "pagerduty", "email"]
+      }
+    ]
+  },
+  "security": {
+    "authentication": {
+      "type": "jwt",
+      "issuer": "https://auth.example.com",
+      "audience": "enterprise-api",
+      "tokenExpiry": 3600,
+      "refreshTokenExpiry": 604800
+    },
+    "authorization": {
+      "rbac": {
+        "enabled": true,
+        "roles": [
+          {
+            "name": "admin",
+            "permissions": ["*"]
+          },
+          {
+            "name": "developer",
+            "permissions": ["read", "write", "deploy"]
+          },
+          {
+            "name": "viewer",
+            "permissions": ["read"]
+          }
+        ]
+      }
+    },
+    "encryption": {
+      "atRest": true,
+      "inTransit": true,
+      "algorithm": "AES-256-GCM"
+    }
+  }
+}

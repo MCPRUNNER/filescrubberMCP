@@ -1,0 +1,8 @@
+# File Summary Report
+
+Directory: {{ directoryPath }}
+Files Found: {{ fileCount }}
+
+{{ for file in files }}
+- {{ file.file_name }} ({{ file.size_in_bytes }} bytes)
+{{ end }}

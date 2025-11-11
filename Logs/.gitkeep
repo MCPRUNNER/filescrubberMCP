@@ -1,0 +1,5 @@
+## Logs directory
+
+# Log files are generated at runtime
+
+\*.txt

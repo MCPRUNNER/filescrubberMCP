@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<company>
+  <name>Tech Solutions Inc</name>
+  <founded>2010</founded>
+  <headquarters>
+    <city>Seattle</city>
+    <state>WA</state>
+    <country>USA</country>
+    <zipCode>98101</zipCode>
+  </headquarters>
+  <employees>
+    <employee id="1">
+      <name>Alice Smith</name>
+      <department>Engineering</department>
+      <position>Senior Developer</position>
+      <salary>95000</salary>
+      <skills>
+        <skill>C#</skill>
+        <skill>JavaScript</skill>
+        <skill>SQL</skill>
+      </skills>
+    </employee>
+    <employee id="2">
+      <name>Bob Johnson</name>
+      <department>Engineering</department>
+      <position>DevOps Engineer</position>
+      <salary>85000</salary>
+      <skills>
+        <skill>Docker</skill>
+        <skill>Kubernetes</skill>
+        <skill>AWS</skill>
+      </skills>
+    </employee>
+    <employee id="3">
+      <name>Carol Williams</name>
+      <department>Sales</department>
+      <position>Account Manager</position>
+      <salary>75000</salary>
+      <skills>
+        <skill>Negotiation</skill>
+        <skill>CRM</skill>
+        <skill>Communication</skill>
+      </skills>
+    </employee>
+  </employees>
+</company>

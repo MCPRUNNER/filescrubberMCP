@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "templateMCP": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "path/to/templateMCP.csproj"
+      ],
+      "env": {
+        "TEMPLATE_MCP_TRANSPORT": "Stdio"
+      }
+    }
+  }
+}

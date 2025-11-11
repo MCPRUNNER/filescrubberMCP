@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  templatemcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - TEMPLATE_MCP_TRANSPORT=Http
+      - ASPNETCORE_URLS=http://+:3001
+    volumes:
+      - ./data:/app/Data
+      - ./logs:/app/Logs
+    restart: unless-stopped

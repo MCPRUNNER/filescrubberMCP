@@ -1,0 +1,32 @@
+# File Listing Report
+
+**Directory:** {{ directoryPath }}  
+**Search Pattern:** {{ searchPattern }}  
+**Recursive:** {{ recursive }}  
+**Total Files:** {{ fileCount }}
+
+---
+
+## File Details
+
+{{ if fileCount == 0 }}
+*No files found matching the criteria.*
+{{ else }}
+| File Name | Size | Extension | Last Modified | Read Only |
+|-----------|------|-----------|---------------|-----------|
+{{ for file in files }}
+| {{ file.full_path }} | {{ file.size_in_bytes }} bytes | {{ file.extension }} | {{ file.last_write_time_utc }} | {{ file.is_read_only }} |
+{{ end }}
+
+---
+
+## Detailed File List
+
+| File Name | Extension | Size (bytes) | Created (UTC) | Modified (UTC) | Read Only | Hidden | Full Path |
+|-----------|-----------|--------------|---------------|----------------|-----------|--------|-----------|
+{{ for file in files }}
+| {{ file.file_name }} | {{ file.extension }} | {{ file.size_in_bytes }} | {{ file.creation_time_utc }} | {{ file.last_write_time_utc }} | {{ file.is_read_only }} | {{ file.is_hidden }} | `{{ file.full_path }}` |
+{{ end }}
+{{ end }}
+
+*Report generated using Scriban template processing*

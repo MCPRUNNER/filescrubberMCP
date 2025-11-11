@@ -1,0 +1,39 @@
+company: Tech Solutions Inc
+founded: 2010
+
+headquarters:
+  city: Seattle
+  state: WA
+  country: USA
+  zipCode: "98101"
+
+employees:
+  - id: 1
+    name: Alice Smith
+    department: Engineering
+    position: Senior Developer
+    salary: 95000
+    skills:
+      - C#
+      - JavaScript
+      - SQL
+  
+  - id: 2
+    name: Bob Johnson
+    department: Engineering
+    position: DevOps Engineer
+    salary: 85000
+    skills:
+      - Docker
+      - Kubernetes
+      - AWS
+  
+  - id: 3
+    name: Carol Williams
+    department: Sales
+    position: Account Manager
+    salary: 75000
+    skills:
+      - Negotiation
+      - CRM
+      - Communication
