@@ -23,12 +23,16 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IParserService, ParserService>();
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<ITemplateService, TemplateService>();
+        services.AddSingleton<IUriService, UriService>();
+        services.AddSingleton<IWorkflowService, WorkflowService>();
 
         // Register tools for MCP
         services.AddSingleton<SampleTools>();
         services.AddSingleton<FileTools>();
         services.AddSingleton<ParserTools>();
         services.AddSingleton<TemplateTools>();
+        services.AddSingleton<UriTools>();
+        services.AddSingleton<WorkflowTools>();
 
         return services;
     }

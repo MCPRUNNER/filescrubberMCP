@@ -33,7 +33,7 @@ public class FileTools : IFileTools
     /// Reads the content of a file
     /// </summary>
     [McpServerTool(Name = "fscrub_file_read"), Description("Reads the content of a file from the specified path.")]
-    public async Task<string> ReadFile(string filePath)
+    public async Task<string> ReadFile([Description("Path to the file to read from (relative to workspace root or absolute path)")] string filePath)
     {
         try
         {
@@ -62,7 +62,7 @@ public class FileTools : IFileTools
     /// Writes content to a file
     /// </summary>
     [McpServerTool(Name = "fscrub_file_write"), Description("Writes text content to a file at the specified path. Creates the file and directory structure if they don't exist.")]
-    public async Task<string> WriteFile(string filePath, string content)
+    public async Task<string> WriteFile([Description("Path to the file to write to (relative to workspace root or absolute path)")] string filePath, [Description("Content to write to the file")] string content)
     {
         try
         {

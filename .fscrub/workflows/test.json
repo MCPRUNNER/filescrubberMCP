@@ -1,0 +1,49 @@
+{
+    "Steps": [
+        {
+            "Name": "GetUrlContent",
+            "Type": "#fscrub_uri_get",
+            "Parameters": {
+                "Uri": "https://raw.githubusercontent.com/MCPRUNNER/filescrubberMCP/refs/heads/main/Examples/medium.json"
+            },
+            "Enabled": true,
+            "Output": {"Name": "Content", "Format": "JSON"}
+        },
+        {
+            "Name": "ProcessTemplate",
+            "Type": "#fscrub_scriban_process_template",
+            "Parameters": {
+                "templateFilePath": "Examples/company_employee_report.sbn",
+                "jsonData": "{GetUrlContent.Content}",
+                "outputFilePath": "Output/company_employee_report.txt"
+            },
+            "Enabled": true
+        } ,
+        {
+            "Name": "DisplayReport",
+            "Type": "#fscrub_file_read",
+            "Parameters": {
+                "filePath": "{ProcessTemplate.outputFilePath}"
+            },
+            "Enabled": true
+        },
+        {
+            "Name": "ParseXmlExample",
+            "Type": "#fscrub_parser_search_xml ",
+            "Parameters": {
+                "filePath": "Examples/medium.xml",
+                "xPath": "//employee[department='Engineering']"
+            },
+            "Enabled": true
+        },
+        {
+            "Name": "SaveXmlReport",
+            "Type": "#fscrub_file_write",
+            "Parameters": {
+                "filePath": "Examples\\test_workflow.txt",
+                "content": "{ParseXmlExample.Result}"
+            },
+            "Enabled": true
+        }
+    ]
+}
