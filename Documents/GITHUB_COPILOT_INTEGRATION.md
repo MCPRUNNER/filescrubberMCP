@@ -26,13 +26,7 @@ The integration uses the Model Context Protocol (MCP) architecture:
 The AIService formats prompts as:
 
 ```
-[COPILOT_REQUEST]
-{your prompt here}
-[/COPILOT_REQUEST]
-```
-
-This format signals to the MCP client that AI processing is required.
-
+@copilot: {your prompt here}
 ## Usage
 
 ### In Workflows
