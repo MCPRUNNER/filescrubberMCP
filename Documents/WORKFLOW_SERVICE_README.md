@@ -84,15 +84,22 @@ Reference outputs from previous steps using curly braces:
 - `#fscrub_parser_search_excel` - Search Excel using JSONPath
 - `#fscrub_parser_transform_xml` - Transform XML using XSLT
 
+### AI Integration Operations
+
+- `#fscrub_ask_github_copilot` - Send prompts to GitHub Copilot for AI-powered analysis and content generation
+
 ## Example Workflow
 
-Here's a complete example that:
+Here's a complete example that demonstrates the full workflow capabilities:
 
-1. Fetches JSON data from a URL
-2. Processes it with a Scriban template
+1. Fetches JSON employee data from a GitHub URL
+2. Processes it with a Scriban template to generate a formatted report
 3. Reads the generated report
-4. Searches XML data
-5. Saves the search results
+4. Searches XML data to extract Engineering department employees
+5. Saves the XML search results
+6. Uses GitHub Copilot to analyze both reports and provide insights
+
+**File:** `.fscrub/workflows/test.json`
 
 ```json
 {
@@ -101,7 +108,7 @@ Here's a complete example that:
       "Name": "GetUrlContent",
       "Type": "#fscrub_uri_get",
       "Parameters": {
-        "Uri": "https://api.example.com/data.json"
+        "Uri": "https://raw.githubusercontent.com/MCPRUNNER/filescrubberMCP/refs/heads/main/Examples/medium.json"
       },
       "Enabled": true,
       "Output": {
@@ -113,9 +120,9 @@ Here's a complete example that:
       "Name": "ProcessTemplate",
       "Type": "#fscrub_scriban_process_template",
       "Parameters": {
-        "templateFilePath": "Templates/report.sbn",
+        "templateFilePath": "Examples/company_employee_report.sbn",
         "jsonData": "{GetUrlContent.Content}",
-        "outputFilePath": "Output/report.txt"
+        "outputFilePath": "Output/company_employee_report.txt"
       },
       "Enabled": true
     },
@@ -125,14 +132,22 @@ Here's a complete example that:
       "Parameters": {
         "filePath": "{ProcessTemplate.outputFilePath}"
       },
+      "Output": {
+        "Name": "Content",
+        "Format": "JSON"
+      },
       "Enabled": true
     },
     {
       "Name": "ParseXmlExample",
       "Type": "#fscrub_parser_search_xml",
       "Parameters": {
-        "filePath": "Data/employees.xml",
+        "filePath": "Examples/medium.xml",
         "xPath": "//employee[department='Engineering']"
+      },
+      "Output": {
+        "Name": "Content",
+        "Format": "XML"
       },
       "Enabled": true
     },
@@ -140,14 +155,32 @@ Here's a complete example that:
       "Name": "SaveXmlReport",
       "Type": "#fscrub_file_write",
       "Parameters": {
-        "filePath": "Output/engineers.txt",
-        "content": "{ParseXmlExample.Result}"
+        "filePath": "Output\\test_workflow.txt",
+        "content": "{ParseXmlExample.Content}"
+      },
+      "Enabled": true
+    },
+    {
+      "Name": "AskGithubCopilotWorkFlowTest",
+      "Type": "#fscrub_ask_github_copilot",
+      "Parameters": {
+        "prompt": "Read content and summarize:\n\n{DisplayReport.Content}\n\nAlso, analyze the following XML data and provide insights:\n\n{ParseXmlExample.Content} and write the response to file `.github/prompts/{AskGithubCopilotWorkFlowTest.promptName}`.",
+        "promptName": "workflow_test1.prompt.md"
       },
       "Enabled": true
     }
   ]
 }
 ```
+
+This workflow demonstrates:
+
+- **HTTP data fetching** from remote URLs
+- **Template processing** with dynamic data
+- **File I/O operations** for reading and writing
+- **XML querying** with XPath expressions
+- **Data passing** between steps using placeholder syntax
+- **AI integration** with GitHub Copilot for intelligent analysis
 
 ## Usage
 
@@ -256,6 +289,30 @@ public class WorkflowStepResult
 - Partial results from completed steps are available in `StepResults`
 - Each step's execution time is tracked for performance analysis
 
+## GitHub Copilot Integration
+
+The `#fscrub_ask_github_copilot` operation allows workflows to leverage AI for:
+
+- **Data Analysis**: Summarize and extract insights from structured data
+- **Content Generation**: Generate reports, documentation, or formatted content
+- **Pattern Recognition**: Identify trends and patterns in data
+- **Recommendations**: Get AI-powered suggestions based on workflow data
+
+### Example Usage in Workflow
+
+```json
+{
+  "Name": "AnalyzeData",
+  "Type": "#fscrub_ask_github_copilot",
+  "Parameters": {
+    "prompt": "Analyze the following employee report and provide insights:\n\n{PreviousStep.Content}\n\nIdentify key findings, salary trends, and skill gaps."
+  },
+  "Enabled": true
+}
+```
+
+The AI response can be captured and used in subsequent steps, or written to files for review.
+
 ## Best Practices
 
 1. **Use Descriptive Names**: Give steps clear, descriptive names
@@ -265,6 +322,8 @@ public class WorkflowStepResult
 5. **Path Resolution**: Use relative paths for portability
 6. **Parameter Validation**: Ensure all required parameters are provided
 7. **Context References**: Verify step dependencies are correct
+8. **AI Prompts**: Provide clear context and specific instructions when using GitHub Copilot
+9. **Organize Workflows**: Store workflow files in `.fscrub/workflows/` directory
 
 ## Limitations
 

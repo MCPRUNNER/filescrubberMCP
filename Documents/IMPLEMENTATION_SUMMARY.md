@@ -191,23 +191,86 @@ No compilation errors in:
 | `Documents/GITHUB_COPILOT_INTEGRATION.md`   | **Created**  | Comprehensive guide    |
 | `Documents/COPILOT_QUICK_REFERENCE.md`      | **Created**  | Quick reference        |
 
+## Workflow System
+
+The workflow system enables complex multi-step data processing pipelines:
+
+### Core Capabilities
+
+- **Sequential Execution** - Steps execute in order with shared context
+- **Data Passing** - Reference previous step outputs using `{StepName.OutputName}` placeholder syntax
+- **Multi-Format Support** - Chain file operations, HTTP requests, parsing, templates, and AI operations
+- **Error Handling** - Workflow stops on first error with detailed error reporting
+- **Performance Tracking** - Each step's execution time is recorded
+- **Conditional Execution** - Enable/disable steps via `Enabled` flag
+
+### Workflow Components
+
+- **`Interfaces/IWorkflowService.cs`** - Workflow service interface
+- **`Services/WorkflowService.cs`** - Workflow orchestration engine
+- **`Interfaces/IWorkflowTools.cs`** - MCP tool interface
+- **`Tools/WorkflowTools.cs`** - MCP tool for workflow execution
+- **`Models/WorkflowDefinition.cs`** - Workflow definition model
+- **`Models/WorkflowStep.cs`** - Individual step model
+- **`Models/WorkflowResult.cs`** - Execution result model
+
+### Supported Step Types
+
+All MCP operations are available as workflow steps:
+
+- **File Operations**: `#fscrub_file_read`, `#fscrub_file_write`, `#fscrub_file_list`
+- **HTTP Operations**: `#fscrub_uri_get`, `#fscrub_uri_post`, `#fscrub_uri_put`, `#fscrub_uri_patch`, `#fscrub_uri_delete`, `#fscrub_uri_head`, `#fscrub_uri_options`
+- **Parser Operations**: `#fscrub_parser_search_json`, `#fscrub_parser_search_xml`, `#fscrub_parser_search_yaml`, `#fscrub_parser_search_csv`, `#fscrub_parser_search_excel`, `#fscrub_parser_transform_xml`
+- **Template Operations**: `#fscrub_scriban_process_template`, `#fscrub_scriban_render_template`
+- **AI Operations**: `#fscrub_ask_github_copilot`
+
+### Example Workflow
+
+See `.fscrub/workflows/test.json` for a complete example demonstrating:
+
+1. HTTP data fetching from GitHub
+2. Scriban template processing
+3. File I/O operations
+4. XML parsing with XPath
+5. GitHub Copilot AI analysis
+
+### Workflow Storage
+
+Workflows are stored in `.fscrub/workflows/` directory as JSON files for organization and version control.
+
 ## Summary
 
-The GitHub Copilot integration is now **fully implemented and functional**. The system can:
+The FileScrubberMCP system now provides **comprehensive workflow automation** capabilities with:
+
+### Core Features
 
 - Execute AI-powered workflow steps
 - Process prompts with data from previous steps
 - Return AI responses for further processing
 - Work seamlessly with existing workflow operations
 - Provide standalone AI query capabilities via MCP tools
+- Chain multiple operations together in declarative workflows
+- Pass data between steps with simple placeholder syntax
+- Track execution metrics and handle errors gracefully
+
+### Implementation Quality
 
 The implementation follows best practices for:
 
-- Clean architecture
-- Dependency injection
-- Error handling
-- Logging
-- Documentation
-- Testability
+- Clean architecture with separated concerns
+- Dependency injection throughout
+- Comprehensive error handling
+- Structured logging with Serilog
+- Extensive documentation
+- High testability
+- Modular and extensible design
 
-**Status**: ✅ **READY FOR USE**
+### Use Cases Enabled
+
+- **Data Processing Pipelines** - Fetch, transform, analyze, and report on data
+- **Report Generation** - Combine data sources, apply templates, get AI insights
+- **API Integration** - Call REST APIs, process responses, store results
+- **Document Automation** - Generate documentation from multiple sources
+- **AI-Powered Analysis** - Leverage GitHub Copilot for intelligent data analysis
+
+**Status**: ✅ **PRODUCTION READY**
