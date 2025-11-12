@@ -8,18 +8,12 @@ public class WorkflowResult
     /// <summary>
     /// Whether the workflow execution was successful
     /// </summary>
-    public bool Success
-    {
-        get; set;
-    }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Error message if the workflow failed
     /// </summary>
-    public string? ErrorMessage
-    {
-        get; set;
-    }
+    public string? ErrorMessage { get; set; }
 
     /// <summary>
     /// The outputs from each step, keyed by step name
@@ -45,32 +39,20 @@ public class WorkflowStepResult
     /// <summary>
     /// Whether the step execution was successful
     /// </summary>
-    public bool Success
-    {
-        get; set;
-    }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Error message if the step failed
     /// </summary>
-    public string? ErrorMessage
-    {
-        get; set;
-    }
+    public string? ErrorMessage { get; set; }
 
     /// <summary>
     /// The output from the step execution
     /// </summary>
-    public object? Output
-    {
-        get; set;
-    }
+    public object? Output { get; set; }
 
     /// <summary>
     /// The execution time in milliseconds
     /// </summary>
-    public long ExecutionTimeMs
-    {
-        get; set;
-    }
+    public long ExecutionTimeMs { get; set; }
 }
