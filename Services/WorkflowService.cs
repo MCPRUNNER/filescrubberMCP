@@ -628,9 +628,19 @@ public class WorkflowService : IWorkflowService
             {
                 return (T)Convert.ChangeType(value, typeof(T));
             }
-            catch
+            catch (InvalidCastException ex)
             {
-                _logger.LogWarning("Failed to convert parameter '{Key}' to type {Type}, using default", key, typeof(T).Name);
+                _logger.LogWarning(ex, "Failed to convert parameter '{Key}' to type {Type} (invalid cast), using default", key, typeof(T).Name);
+                return defaultValue;
+            }
+            catch (FormatException ex)
+            {
+                _logger.LogWarning(ex, "Failed to convert parameter '{Key}' to type {Type} (format error), using default", key, typeof(T).Name);
+                return defaultValue;
+            }
+            catch (OverflowException ex)
+            {
+                _logger.LogWarning(ex, "Failed to convert parameter '{Key}' to type {Type} (overflow), using default", key, typeof(T).Name);
                 return defaultValue;
             }
         }
