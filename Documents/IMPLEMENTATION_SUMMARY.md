@@ -56,9 +56,7 @@ Successfully implemented GitHub Copilot integration for the FileScrubberMCP work
 2. `WorkflowService.ExecuteAskGithubCopilotAsync()` receives the request
 3. `AIService.AskGithubCopilotAsync()` formats the prompt:
    ```
-   [COPILOT_REQUEST]
-   {user prompt}
-   [/COPILOT_REQUEST]
+   @copilot: {user prompt}
    ```
 4. MCP client (GitHub Copilot) processes the formatted request
 5. AI response returns through MCP protocol
