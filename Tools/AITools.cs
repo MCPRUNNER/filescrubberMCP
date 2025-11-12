@@ -62,7 +62,18 @@ public class AITools : IAITools
                 promptName = promptName ?? "auto-generated"
             }, Formatting.Indented);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, "Invalid argument in AskGithubCopilot tool");
+            return JsonConvert.SerializeObject(new
+            {
+                success = false,
+                errorMessage = ex.Message
+            }, Formatting.Indented);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException && 
+                                     ex is not StackOverflowException && 
+                                     ex is not ThreadAbortException)
         {
             _logger.LogError(ex, "Error in AskGithubCopilot tool");
             return JsonConvert.SerializeObject(new
