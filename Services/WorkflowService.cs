@@ -292,9 +292,10 @@ public class WorkflowService : IWorkflowService
                                 var element = XElement.Parse(xmlString);
                                 xmlDoc.Root?.Add(element);
                             }
-                            catch
+                            catch (System.Xml.XmlException ex)
                             {
                                 // If not valid XML, add as a text element
+                                _logger.LogWarning(ex, "Failed to parse item as XML. Adding as text element.");
                                 xmlDoc.Root?.Add(new XElement("Result", xmlString));
                             }
                         }
