@@ -25,23 +25,34 @@
             "Parameters": {
                 "filePath": "{ProcessTemplate.outputFilePath}"
             },
+            "Output": {"Name": "Content", "Format": "JSON"},
             "Enabled": true
         },
         {
             "Name": "ParseXmlExample",
-            "Type": "#fscrub_parser_search_xml ",
+            "Type": "#fscrub_parser_search_xml",
             "Parameters": {
                 "filePath": "Examples/medium.xml",
                 "xPath": "//employee[department='Engineering']"
             },
+            "Output": {"Name": "Content", "Format": "XML"},
             "Enabled": true
         },
         {
             "Name": "SaveXmlReport",
             "Type": "#fscrub_file_write",
             "Parameters": {
-                "filePath": "Examples\\test_workflow.txt",
-                "content": "{ParseXmlExample.Result}"
+                "filePath": "Output\\test_workflow.txt",
+                "content": "{ParseXmlExample.Content}"
+            },
+            "Enabled": true
+        },
+        {
+            "Name": "AskGithubCopilotWorkFlowTest",
+            "Type": "#fscrub_ask_github_copilot",
+            "Parameters": {
+                "prompt": "Read content and summarize:\n\n{DisplayReport.Content}\n\nAlso, analyze the following XML data and provide insights:\n\n{ParseXmlExample.Content} and write the response to file `.github/prompts/{AskGithubCopilotWorkFlowTest.promptName}`.",
+                "promptName": "workflow_test1.prompt.md"
             },
             "Enabled": true
         }

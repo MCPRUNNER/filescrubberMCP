@@ -42,7 +42,8 @@ if (transportType.Equals("Http", StringComparison.OrdinalIgnoreCase))
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
         .WithTools<WorkflowTools>()
-        .WithTools<UriTools>();
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 else if (transportType.Equals("Stdio", StringComparison.OrdinalIgnoreCase))
 {
@@ -53,7 +54,8 @@ else if (transportType.Equals("Stdio", StringComparison.OrdinalIgnoreCase))
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
         .WithTools<WorkflowTools>()
-        .WithTools<UriTools>();
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 else
 {
@@ -64,7 +66,8 @@ else
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
         .WithTools<WorkflowTools>()
-        .WithTools<UriTools>();
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 
 // Add application services
@@ -73,6 +76,7 @@ builder.Services.AddSingleton<ILoggingConfigurationService, LoggingConfiguration
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IParserService, ParserService>();
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
+builder.Services.AddSingleton<IAIService, AIService>();
 builder.Services.AddSingleton<IWorkflowService, WorkflowService>();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IUriService, UriService>();
@@ -86,6 +90,7 @@ builder.Services.AddSingleton<ParserTools>();
 builder.Services.AddSingleton<TemplateTools>();
 builder.Services.AddSingleton<WorkflowTools>();
 builder.Services.AddSingleton<UriTools>();
+builder.Services.AddSingleton<AITools>();
 
 // Add logging
 builder.Services.AddLogging();

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,6 +19,7 @@ public class WorkflowService : IWorkflowService
     private readonly IUriService _uriService;
     private readonly ITemplateService _templateService;
     private readonly IParserService _parserService;
+    private readonly IAIService _aiService;
 
     /// <summary>
     /// Initializes a new instance of the WorkflowService class
@@ -27,13 +29,15 @@ public class WorkflowService : IWorkflowService
         IFileService fileService,
         IUriService uriService,
         ITemplateService templateService,
-        IParserService parserService)
+        IParserService parserService,
+        IAIService aiService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         _uriService = uriService ?? throw new ArgumentNullException(nameof(uriService));
         _templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
         _parserService = parserService ?? throw new ArgumentNullException(nameof(parserService));
+        _aiService = aiService ?? throw new ArgumentNullException(nameof(aiService));
     }
 
     /// <summary>
@@ -106,6 +110,14 @@ public class WorkflowService : IWorkflowService
                     {
                         // Store entire output under step name
                         context[step.Name] = stepOutput;
+                    }
+
+                    // Also store resolved parameters for reference (e.g., {StepName.parameterName})
+                    foreach (var param in resolvedParameters)
+                    {
+                        context[$"{step.Name}.{param.Key}"] = param.Value;
+                        _logger.LogDebug("Stored parameter: {StepName}.{ParamKey} = {ParamValue}",
+                            step.Name, param.Key, param.Value);
                     }
 
                     result.StepOutputs[step.Name] = stepOutput;
@@ -260,6 +272,44 @@ public class WorkflowService : IWorkflowService
                 }
             }
         }
+        else if (outputConfig.Format?.Equals("XML", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            // If output is a JSON array containing XML strings, convert it to proper XML
+            if (stepOutput is string outputString)
+            {
+                try
+                {
+                    var parsed = JToken.Parse(outputString);
+                    if (parsed is JArray array)
+                    {
+                        // Wrap multiple XML elements in a root element
+                        var xmlDoc = new XDocument(new XElement("Results"));
+                        foreach (var item in array)
+                        {
+                            var xmlString = item.ToString();
+                            try
+                            {
+                                var element = XElement.Parse(xmlString);
+                                xmlDoc.Root?.Add(element);
+                            }
+                            catch
+                            {
+                                // If not valid XML, add as a text element
+                                xmlDoc.Root?.Add(new XElement("Result", xmlString));
+                            }
+                        }
+                        return xmlDoc.ToString();
+                    }
+                    // If it's a single JSON value containing XML, just return it
+                    return outputString;
+                }
+                catch (JsonException)
+                {
+                    // Not JSON, assume it's already XML
+                    return stepOutput;
+                }
+            }
+        }
 
         return stepOutput;
     }
@@ -269,8 +319,8 @@ public class WorkflowService : IWorkflowService
     /// </summary>
     private async Task<object> ExecuteStepAsync(string stepType, Dictionary<string, object> parameters)
     {
-        // Remove the # prefix if present
-        var type = stepType.TrimStart('#');
+        // Remove the # prefix and trim whitespace
+        var type = stepType.TrimStart('#').Trim();
 
         return type switch
         {
@@ -292,6 +342,7 @@ public class WorkflowService : IWorkflowService
             "fscrub_parser_search_csv" => await ExecuteParserSearchCsvAsync(parameters),
             "fscrub_parser_search_excel" => await ExecuteParserSearchExcelAsync(parameters),
             "fscrub_parser_transform_xml" => await ExecuteParserTransformXmlAsync(parameters),
+            "fscrub_ask_github_copilot" => await ExecuteAskGithubCopilotAsync(parameters),
             _ => throw new NotSupportedException($"Step type not supported: {stepType}")
         };
     }
@@ -512,6 +563,17 @@ public class WorkflowService : IWorkflowService
 
         var result = await Task.Run(() => _parserService.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationFilePath));
         return result ?? string.Empty;
+    }
+
+    #endregion
+
+    #region AI Operations
+
+    private async Task<object> ExecuteAskGithubCopilotAsync(Dictionary<string, object> parameters)
+    {
+        var prompt = GetRequiredParameter<string>(parameters, "prompt");
+        var promptName = GetOptionalParameter<string>(parameters, "promptName");
+        return await _aiService.AskGithubCopilotAsync(prompt, promptName);
     }
 
     #endregion

@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<ITemplateService, TemplateService>();
         services.AddSingleton<IUriService, UriService>();
+        services.AddSingleton<IAIService, AIService>();
         services.AddSingleton<IWorkflowService, WorkflowService>();
 
         // Register tools for MCP
@@ -33,6 +34,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<TemplateTools>();
         services.AddSingleton<UriTools>();
         services.AddSingleton<WorkflowTools>();
+        services.AddSingleton<AITools>();
 
         return services;
     }
