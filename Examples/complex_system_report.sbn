@@ -1,0 +1,188 @@
+# Enterprise System Configuration Report
+
+**API Version:** {{ apiVersion }}
+
+---
+
+## System Metadata
+
+| Property | Value |
+|----------|-------|
+| **Name** | {{ metadata.name }} |
+| **Version** | {{ metadata.version }} |
+| **Created** | {{ metadata.created }} |
+| **Last Modified** | {{ metadata.lastModified }} |
+| **Tags** | {{ metadata.tags | array.join ", " }} |
+
+---
+
+## Database Configuration
+
+### Primary Database
+
+| Property | Value |
+|----------|-------|
+| **Host** | {{ configuration.database.primary.host }} |
+| **Port** | {{ configuration.database.primary.port }} |
+| **Database Name** | {{ configuration.database.primary.name }} |
+| **SSL Enabled** | {{ configuration.database.primary.ssl }} |
+| **Pool Size** | {{ configuration.database.primary.poolSize }} |
+| **Timeout (ms)** | {{ configuration.database.primary.timeout }} |
+
+### Database Replicas
+
+| Host | Port | Region |
+|------|------|--------|
+{{- for replica in configuration.database.replicas }}
+| {{ replica.host }} | {{ replica.port }} | {{ replica.region }} |
+{{- end }}
+
+---
+
+## Cache Configuration (Redis)
+
+| Property | Value |
+|----------|-------|
+| **Enabled** | {{ configuration.cache.redis.enabled }} |
+| **TTL (seconds)** | {{ configuration.cache.redis.ttl }} |
+| **Max Memory** | {{ configuration.cache.redis.maxMemory }} |
+| **Nodes** | {{ configuration.cache.redis.nodes | array.join ", " }} |
+
+---
+
+## Microservices
+
+{{- for service in configuration.services }}
+
+### {{ service.name }}
+
+**Type:** {{ service.type }} | **Replicas:** {{ service.replicas }}
+
+#### Resources
+
+| Resource | Allocation |
+|----------|------------|
+| **CPU** | {{ service.resources.cpu }} |
+| **Memory** | {{ service.resources.memory }} |
+| **Storage** | {{ service.resources.storage }} |
+
+#### API Endpoints
+
+| Endpoint |
+|----------|
+{{- for endpoint in service.endpoints }}
+| `{{ endpoint }}` |
+{{- end }}
+
+{{- if service.dependencies }}
+**Dependencies:** {{ service.dependencies | array.join ", " }}
+{{- end }}
+
+{{- if service.queue }}
+**Message Queue:**
+- Type: {{ service.queue.type }}
+- Host: {{ service.queue.host }}
+- VHost: {{ service.queue.vhost }}
+- Queues: {{ service.queue.queues | array.join ", " }}
+{{- end }}
+
+{{- if service.healthCheck }}
+**Health Check:**
+- Path: `{{ service.healthCheck.path }}`
+- Interval: {{ service.healthCheck.interval }}s
+- Timeout: {{ service.healthCheck.timeout }}s
+- Retries: {{ service.healthCheck.retries }}
+{{- end }}
+
+---
+{{- end }}
+
+## Monitoring & Observability
+
+### Metrics Collection
+
+#### Prometheus
+
+| Property | Value |
+|----------|-------|
+| **Enabled** | {{ monitoring.metrics.prometheus.enabled }} |
+| **Scrape Interval** | {{ monitoring.metrics.prometheus.scrapeInterval }} |
+| **Endpoints** | {{ monitoring.metrics.prometheus.endpoints | array.join ", " }} |
+
+#### Grafana Dashboards
+
+| Dashboard |
+|-----------|
+{{- for dashboard in monitoring.metrics.grafana.dashboards }}
+| {{ dashboard }} |
+{{- end }}
+
+### Logging Configuration
+
+| Property | Value |
+|----------|-------|
+| **Log Level** | {{ monitoring.logging.level }} |
+| **Outputs** | {{ monitoring.logging.outputs | array.join ", " }} |
+| **Elasticsearch Host** | {{ monitoring.logging.elasticsearch.host }} |
+| **Index Name** | {{ monitoring.logging.elasticsearch.index }} |
+| **Retention Period** | {{ monitoring.logging.elasticsearch.retention }} |
+
+### Alert Rules
+
+| Alert Name | Condition | Severity | Notification Channels |
+|------------|-----------|----------|----------------------|
+{{- for alert in monitoring.alerts }}
+| {{ alert.name }} | `{{ alert.condition }}` | **{{ alert.severity }}** | {{ alert.channels | array.join ", " }} |
+{{- end }}
+
+---
+
+## Security Configuration
+
+### Authentication (JWT)
+
+| Property | Value |
+|----------|-------|
+| **Type** | {{ security.authentication.type | string.upcase }} |
+| **Issuer** | {{ security.authentication.issuer }} |
+| **Audience** | {{ security.authentication.audience }} |
+| **Token Expiry** | {{ security.authentication.tokenExpiry }}s ({{ (security.authentication.tokenExpiry / 60) | math.floor }} minutes) |
+| **Refresh Token Expiry** | {{ security.authentication.refreshTokenExpiry }}s ({{ (security.authentication.refreshTokenExpiry / 86400) | math.floor }} days) |
+
+### Authorization (RBAC)
+
+**Role-Based Access Control:** {{ security.authorization.rbac.enabled ? "Enabled" : "Disabled" }}
+
+| Role | Permissions |
+|------|-------------|
+{{- for role in security.authorization.rbac.roles }}
+| **{{ role.name }}** | {{ role.permissions | array.join ", " }} |
+{{- end }}
+
+### Encryption
+
+| Property | Value |
+|----------|-------|
+| **At Rest** | {{ security.encryption.atRest ? "✅ Enabled" : "❌ Disabled" }} |
+| **In Transit** | {{ security.encryption.inTransit ? "✅ Enabled" : "❌ Disabled" }} |
+| **Algorithm** | {{ security.encryption.algorithm }} |
+
+---
+
+## Summary Statistics
+
+{{- total_replicas = 0 }}
+{{- for service in configuration.services }}
+  {{- total_replicas = total_replicas + service.replicas }}
+{{- end }}
+
+- **Total Microservices:** {{ configuration.services | array.size }}
+- **Total Service Replicas:** {{ total_replicas }}
+- **Total Database Nodes:** {{ 1 + (configuration.database.replicas | array.size) }} (1 primary + {{ configuration.database.replicas | array.size }} replicas)
+- **Total Cache Nodes:** {{ configuration.cache.redis.nodes | array.size }}
+- **Total Alert Rules:** {{ monitoring.alerts | array.size }}
+- **Security Roles Defined:** {{ security.authorization.rbac.roles | array.size }}
+
+---
+
+*Report generated from complex system configuration*

@@ -1,0 +1,23 @@
+{
+    "Steps": [
+        {
+            "Name": "GetUrlContent",
+            "Type": "#fscrub_uri_get",
+            "Parameters": {
+                "Uri": "https://raw.githubusercontent.com/MCPRUNNER/filescrubberMCP/refs/heads/main/Examples/complex.json"
+            },
+            "Enabled": true,
+            "Output": {"Name": "Content", "Format": "JSON"}
+        },
+        {
+            "Name": "ProcessTemplate",
+            "Type": "#fscrub_scriban_process_template",
+            "Parameters": {
+                "templateFilePath": "Examples/complex_system_report.sbn",
+                "jsonData": "{GetUrlContent.Content}",
+                "outputFilePath": "Output/complex_system_report.md"
+            },
+            "Enabled": true
+        }  
+    ]
+}
