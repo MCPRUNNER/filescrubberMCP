@@ -41,7 +41,9 @@ if (transportType.Equals("Http", StringComparison.OrdinalIgnoreCase))
         .WithTools<FileTools>()
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
-        .WithTools<UriTools>();
+        .WithTools<WorkflowTools>()
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 else if (transportType.Equals("Stdio", StringComparison.OrdinalIgnoreCase))
 {
@@ -51,7 +53,9 @@ else if (transportType.Equals("Stdio", StringComparison.OrdinalIgnoreCase))
         .WithTools<FileTools>()
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
-        .WithTools<UriTools>();
+        .WithTools<WorkflowTools>()
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 else
 {
@@ -61,7 +65,9 @@ else
         .WithTools<FileTools>()
         .WithTools<ParserTools>()
         .WithTools<TemplateTools>()
-        .WithTools<UriTools>();
+        .WithTools<WorkflowTools>()
+        .WithTools<UriTools>()
+        .WithTools<AITools>();
 }
 
 // Add application services
@@ -70,6 +76,8 @@ builder.Services.AddSingleton<ILoggingConfigurationService, LoggingConfiguration
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IParserService, ParserService>();
 builder.Services.AddSingleton<ITemplateService, TemplateService>();
+builder.Services.AddSingleton<IAIService, AIService>();
+builder.Services.AddSingleton<IWorkflowService, WorkflowService>();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IUriService, UriService>();
 builder.Services.AddTransient<ISampleService, SampleService>();
@@ -79,7 +87,10 @@ builder.Services.AddTransient<ISampleTools, SampleTools>();
 builder.Services.AddTransient<SampleTools>();
 builder.Services.AddSingleton<FileTools>();
 builder.Services.AddSingleton<ParserTools>();
+builder.Services.AddSingleton<TemplateTools>();
+builder.Services.AddSingleton<WorkflowTools>();
 builder.Services.AddSingleton<UriTools>();
+builder.Services.AddSingleton<AITools>();
 
 // Add logging
 builder.Services.AddLogging();

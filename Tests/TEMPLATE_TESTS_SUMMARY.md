@@ -1,18 +1,121 @@
-# Template Service and Tools Test Coverage
+# Test Coverage Summary
 
 ## Overview
 
-Comprehensive test suites for the Scriban template processing functionality in filescrubberMCP.
+Comprehensive test suites for filescrubberMCP services and tools, including file operations, template processing, URI operations, and workflow automation.
 
-## Test Files Created
+## Test Files
 
-### 1. TemplateServiceTests.cs
+### Service Tests
 
-Tests for `Services/TemplateService.cs` - 18 test cases
+1. **FileServiceTests.cs** - File operations service tests
+2. **TemplateServiceTests.cs** - Scriban template processing tests (18 test cases)
+3. **UriServiceTests.cs** - HTTP/URI operations tests
+4. **WorkflowServiceTests.cs** - Workflow execution and orchestration tests (32 test cases)
+5. **SampleServiceTests.cs** - Sample/demo service tests
+6. **LoggingConfigurationServiceTests.cs** - Logging configuration tests
 
-### 2. TemplateToolsTests.cs
+### Tools Tests
 
-Tests for `Tools/TemplateTools.cs` - 15 test cases
+1. **FileToolsTests.cs** - File operation MCP tools tests
+2. **TemplateToolsTests.cs** - Template processing MCP tools tests (15 test cases)
+3. **UriToolsTests.cs** - URI operation MCP tools tests
+4. **WorkflowToolsTests.cs** - Workflow execution MCP tools tests (11 test cases)
+5. **ParserToolsTests.cs** - Parser operation MCP tools tests
+6. **SampleToolsTests.cs** - Sample MCP tools tests
+
+---
+
+## Workflow Tests (NEW)
+
+### WorkflowServiceTests.cs - 32 test cases
+
+Comprehensive tests for the workflow orchestration engine that executes multi-step data processing pipelines.
+
+#### Constructor Tests (2 tests)
+
+- **Constructor_WithNullLogger_ThrowsArgumentNullException** - Validates dependency injection
+- **Constructor_WithNullFileService_ThrowsArgumentNullException** - Validates required services
+
+#### LoadWorkflowAsync Tests (3 tests)
+
+- **LoadWorkflowAsync_WithValidJson_ReturnsWorkflowDefinition** - Successful workflow loading
+- **LoadWorkflowAsync_WithInvalidJson_ThrowsJsonException** - Invalid JSON handling
+- **LoadWorkflowAsync_WithNonExistentFile_ThrowsException** - Missing file handling
+
+#### ExecuteWorkflowAsync Tests (7 tests)
+
+- **ExecuteWorkflowAsync_WithSingleFileReadStep_ExecutesSuccessfully** - Single step execution
+- **ExecuteWorkflowAsync_WithMultipleSteps_ExecutesInSequence** - Sequential step execution
+- **ExecuteWorkflowAsync_WithPlaceholderReplacement_ResolvesCorrectly** - Data passing between steps
+- **ExecuteWorkflowAsync_WithDisabledStep_SkipsStep** - Conditional step execution
+- **ExecuteWorkflowAsync_WithStepError_StopsExecution** - Error handling and workflow termination
+- **ExecuteWorkflowAsync_WithEmptyWorkflow_ReturnsSuccess** - Edge case: empty workflow
+- **ExecuteWorkflowAsync_WithComplexDataPipeline_ExecutesCorrectly** - Full integration test
+
+#### File Operation Tests (2 tests)
+
+- **ExecuteWorkflowAsync_WithFileWriteStep_WritesFile** - File write operations
+- **ExecuteWorkflowAsync_WithFileListStep_ListsFiles** - File listing operations
+
+#### URI Operation Tests (2 tests)
+
+- **ExecuteWorkflowAsync_WithUriGetStep_FetchesData** - HTTP GET requests
+- **ExecuteWorkflowAsync_WithUriPostStep_PostsData** - HTTP POST requests
+
+#### Template Operation Tests (2 tests)
+
+- **ExecuteWorkflowAsync_WithTemplateProcessStep_ProcessesTemplate** - Template processing
+- **ExecuteWorkflowAsync_WithTemplateRenderStep_RendersTemplate** - Template rendering
+
+#### Parser Operation Tests (2 tests)
+
+- **ExecuteWorkflowAsync_WithJsonSearchStep_SearchesJson** - JSON querying
+- **ExecuteWorkflowAsync_WithXmlSearchStep_SearchesXml** - XML querying
+
+#### AI Operation Tests (2 tests)
+
+- **ExecuteWorkflowAsync_WithAIStep_InvokesAIService** - GitHub Copilot integration
+- **ExecuteWorkflowAsync_WithAIStepAndPromptName_PassesPromptName** - AI with named prompts
+
+#### ExecuteWorkflowFromFileAsync Tests (2 tests)
+
+- **ExecuteWorkflowFromFileAsync_WithValidFile_LoadsAndExecutes** - End-to-end workflow execution
+- **ExecuteWorkflowFromFileAsync_WithInvalidFile_ReturnsFailure** - Error handling
+
+#### Edge Case Tests (1 test)
+
+- **ExecuteWorkflowAsync_WithUnsupportedStepType_ReturnsError** - Invalid step type handling
+
+### WorkflowToolsTests.cs - 11 test cases
+
+Tests for the MCP tool wrapper that exposes workflow execution to AI clients.
+
+#### Basic Workflow Tests (3 tests)
+
+- **ExecuteWorkflow_WithValidWorkflow_ReturnsSuccessJson** - Successful execution
+- **ExecuteWorkflow_WithFailedWorkflow_ReturnsFailureJson** - Error response format
+- **ExecuteWorkflow_WithEmptyWorkflow_ReturnsSuccessWithNoSteps** - Empty workflow handling
+
+#### Multi-Step Tests (2 tests)
+
+- **ExecuteWorkflow_WithMultipleSteps_ReturnsAllStepResults** - Multiple step results
+- **ExecuteWorkflow_WithPartialFailure_ReturnsCorrectStatus** - Partial execution results
+
+#### Error Handling Tests (1 test)
+
+- **ExecuteWorkflow_WhenServiceThrowsException_ReturnsErrorJson** - Exception to JSON conversion
+
+#### Advanced Tests (3 tests)
+
+- **ExecuteWorkflow_WithStepExecutionTimes_ReturnsTimingInformation** - Performance metrics
+- **ExecuteWorkflow_WithComplexOutputs_SerializesCorrectly** - Complex data serialization
+- **ExecuteWorkflow_WithNullStepOutput_HandlesGracefully** - Null output handling
+
+#### Logging Tests (2 tests)
+
+- **ExecuteWorkflow_LogsAppropriateInformation** - Information logging
+- **ExecuteWorkflow_WhenExceptionThrown_LogsError** - Error logging
 
 ---
 
@@ -170,40 +273,65 @@ mock.Verify(x => x.Method(input), Times.Once);
 
 ## Running the Tests
 
-### Run all template tests:
+### Run all tests:
 
 ```powershell
+dotnet test
+```
+
+### Run specific component tests:
+
+```powershell
+# Template tests
 dotnet test --filter "FullyQualifiedName~TemplateServiceTests|FullyQualifiedName~TemplateToolsTests"
+
+# Workflow tests
+dotnet test --filter "FullyQualifiedName~WorkflowServiceTests|FullyQualifiedName~WorkflowToolsTests"
+
+# File operation tests
+dotnet test --filter "FullyQualifiedName~FileServiceTests|FullyQualifiedName~FileToolsTests"
+
+# URI operation tests
+dotnet test --filter "FullyQualifiedName~UriServiceTests|FullyQualifiedName~UriToolsTests"
 ```
 
-### Run service tests only:
+### Run by test type:
 
 ```powershell
-dotnet test --filter "FullyQualifiedName~TemplateServiceTests"
-```
+# All service tests
+dotnet test --filter "FullyQualifiedName~Services"
 
-### Run tools tests only:
-
-```powershell
-dotnet test --filter "FullyQualifiedName~TemplateToolsTests"
+# All tools tests
+dotnet test --filter "FullyQualifiedName~Tools"
 ```
 
 ### Run specific test:
 
 ```powershell
-dotnet test --filter "FullyQualifiedName~ProcessTemplateAsync_WithValidTemplate_RendersSuccessfully"
+dotnet test --filter "FullyQualifiedName~ExecuteWorkflowAsync_WithComplexDataPipeline_ExecutesCorrectly"
 ```
 
 ---
 
 ## Test Metrics
 
-- **Total Tests**: 33
-- **Service Tests**: 18
-- **Tools Tests**: 15
-- **Success Path Tests**: 18 (55%)
-- **Error Path Tests**: 15 (45%)
+### Overall Statistics
+
+- **Total Tests**: 76+
+- **Service Tests**: 50+
+- **Tools Tests**: 26+
+- **Success Path Tests**: ~60%
+- **Error Path Tests**: ~40%
 - **Code Coverage**: High (all public methods tested)
+
+### Breakdown by Component
+
+- **Template Tests**: 33 tests (18 service + 15 tools)
+- **Workflow Tests**: 43 tests (32 service + 11 tools)
+- **File Tests**: Multiple tests across services and tools
+- **URI Tests**: Multiple tests across services and tools
+- **Parser Tests**: Multiple tests across tools
+- **Sample/Logging Tests**: Multiple configuration and demo tests
 
 ---
 

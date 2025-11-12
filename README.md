@@ -22,6 +22,10 @@ This project is currently in active development and may undergo significant chan
 
 - **🌐 HTTP Client Operations**: Execute HTTP requests (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) with custom headers and JSON payloads.
 
+- **⚙️ Workflow Automation**: Execute complex multi-step workflows defined in JSON files. Chain operations together, pass data between steps, and automate entire data processing pipelines.
+
+- **🤖 AI Integration**: Built-in GitHub Copilot integration for AI-powered analysis and content generation within workflows.
+
 - **🔌 Flexible Transport**: Supports both HTTP and Stdio transports for seamless integration with various MCP clients and AI platforms.
 
 ### Ideal Use Cases
@@ -32,6 +36,8 @@ This project is currently in active development and may undergo significant chan
 - **Data Transformation**: Convert between formats, transform XML with XSLT, and process structured data
 - **API Integration**: Make HTTP requests to REST APIs and process responses
 - **Documentation**: Generate documentation from code, data, or file metadata
+- **Workflow Automation**: Chain multiple operations together in declarative JSON workflows
+- **AI-Powered Analysis**: Leverage GitHub Copilot for intelligent data analysis and content generation
 
 ### Architecture
 
@@ -70,11 +76,26 @@ Support for multiple file formats with powerful query capabilities:
 - Supports loops, conditionals, filters, and custom functions
 - Example templates for file listing reports included
 
-### 🔗 URI Operations
+### 🌐 HTTP/URI Operations
 
+Full HTTP client support for REST API integration:
+
+- **GET, POST, PUT, PATCH, DELETE** - Standard HTTP methods
+- **HEAD, OPTIONS** - HTTP metadata operations
+- Custom headers and JSON payloads
 - Parse and validate URIs
-- Extract components (scheme, host, path, query, fragment)
-- Build URIs from components
+- Extract URI components (scheme, host, path, query, fragment)
+
+### ⚙️ Workflow Automation
+
+Execute complex multi-step workflows with data flow between steps:
+
+- **Sequential Execution** - Steps run in order with context sharing
+- **Data Transformation Pipelines** - Chain file operations, HTTP requests, parsing, and templates
+- **Placeholder References** - Use `{StepName.OutputName}` to reference previous step outputs
+- **Conditional Execution** - Enable/disable steps dynamically
+- **GitHub Copilot Integration** - AI-powered analysis and content generation within workflows
+- See `Documents/WORKFLOW_SERVICE_README.md` for details
 
 ## Quick Start
 
@@ -379,6 +400,55 @@ Send an OPTIONS request to the specified URI.
 
 - `uri` (string) - URI to send OPTIONS request to
 - `headersJson` (string, optional) - JSON object of headers
+
+### Workflow Tools
+
+#### `fscrub_workflow_execute`
+
+Execute a multi-step workflow defined in a JSON file.
+
+**Parameters:**
+
+- `workflowFilePath` (string) - Path to the workflow JSON file
+
+**Example:**
+
+```json
+{
+  "workflowFilePath": ".fscrub/workflows/data-pipeline.json"
+}
+```
+
+**Workflow Features:**
+
+- Sequential step execution with data passing
+- Reference previous step outputs using `{StepName.OutputName}`
+- Support for all file, parser, template, and URI operations
+- GitHub Copilot integration for AI-powered analysis
+- Enable/disable individual steps
+- Detailed execution metrics and error handling
+
+See `Documents/WORKFLOW_SERVICE_README.md` for workflow definition format and examples.
+
+### AI Integration Tools
+
+#### `fscrub_ask_github_copilot`
+
+Send a prompt to GitHub Copilot for AI-powered analysis or content generation.
+
+**Parameters:**
+
+- `prompt` (string) - The prompt to send to GitHub Copilot
+
+**Example:**
+
+```json
+{
+  "prompt": "Analyze the following employee data and provide insights:\n\n{PreviousStep.Content}"
+}
+```
+
+**Note:** This tool is primarily used within workflows but can be called independently.
 
 ## Template Examples
 
