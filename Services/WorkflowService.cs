@@ -241,7 +241,7 @@ public class WorkflowService : IWorkflowService
                     }
                     else
                     {
-                        resolvedNested[prop.Name] = prop.Value;
+                        resolvedNested[prop.Name] = ((JToken)prop.Value).ToObject<object>() ?? prop.Value;
                     }
                 }
                 resolved[kvp.Key] = resolvedNested;
