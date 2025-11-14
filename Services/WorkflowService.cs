@@ -605,7 +605,7 @@ public class WorkflowService : IWorkflowService
             {
                 xsltParameters = paramsDict.ToDictionary(
                     kvp => kvp.Key,
-                    kvp => kvp.Value?.ToString()?.Trim() ?? string.Empty
+                    kvp => kvp.Value?.ToString() ?? string.Empty
                 );
                 _logger.LogInformation("Converted {Count} parameters from Dictionary<string, object>", xsltParameters.Count);
                 foreach (var kvp in xsltParameters)
