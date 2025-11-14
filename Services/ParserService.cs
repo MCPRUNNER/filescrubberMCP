@@ -239,7 +239,7 @@ public class ParserService : IParserService
     /// <summary>
     /// Transforms an XML file using an XSLT stylesheet
     /// </summary>
-    public string? TransformXmlWithXslt(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null)
+    public string? TransformXmlWithXslt(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null, Dictionary<string, string>? xsltParameters = null)
     {
         try
         {
@@ -276,9 +276,25 @@ public class ParserService : IParserService
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(fullXmlPath);
 
+            // Create XSLT argument list and add parameters if provided
+            var xsltArgs = new XsltArgumentList();
+            if (xsltParameters != null && xsltParameters.Count > 0)
+            {
+                _logger.LogInformation("Adding {Count} XSLT parameters", xsltParameters.Count);
+                foreach (var param in xsltParameters)
+                {
+                    xsltArgs.AddParam(param.Key, string.Empty, param.Value);
+                    _logger.LogInformation("Added XSLT parameter: {Key} = '{Value}'", param.Key, param.Value);
+                }
+            }
+            else
+            {
+                _logger.LogInformation("No XSLT parameters provided");
+            }
+
             using var stringWriter = new StringWriter();
             using var xmlWriter = XmlWriter.Create(stringWriter, xslt.OutputSettings);
-            xslt.Transform(xmlDoc, xmlWriter);
+            xslt.Transform(xmlDoc, xsltArgs, xmlWriter);
             var result = stringWriter.ToString();
 
             if (!string.IsNullOrWhiteSpace(destinationFilePath))

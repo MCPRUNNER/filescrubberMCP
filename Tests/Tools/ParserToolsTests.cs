@@ -141,7 +141,7 @@ public class ParserToolsTests
         var xmlFilePath = "input.xml";
         var xsltFilePath = "transform.xslt";
         var expectedResult = "<transformed>Output</transformed>";
-        _mockParserService.Setup(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, null))
+        _mockParserService.Setup(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, null, null))
             .Returns(expectedResult);
 
         // Act
@@ -151,7 +151,7 @@ public class ParserToolsTests
         Assert.Contains("\"success\": true", result);
         Assert.Contains(xmlFilePath, result);
         Assert.Contains(xsltFilePath, result);
-        _mockParserService.Verify(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, null), Times.Once);
+        _mockParserService.Verify(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, null, null), Times.Once);
     }
 
     [Fact]
@@ -161,7 +161,7 @@ public class ParserToolsTests
         var xmlFilePath = "input.xml";
         var xsltFilePath = "transform.xslt";
         var destinationPath = "output.xml";
-        _mockParserService.Setup(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationPath))
+        _mockParserService.Setup(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationPath, null))
             .Returns("<result/>");
 
         // Act
@@ -170,7 +170,7 @@ public class ParserToolsTests
         // Assert
         Assert.Contains("\"success\": true", result);
         Assert.Contains(destinationPath, result);
-        _mockParserService.Verify(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationPath), Times.Once);
+        _mockParserService.Verify(x => x.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationPath, null), Times.Once);
     }
 
     [Fact]

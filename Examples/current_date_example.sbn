@@ -1,0 +1,27 @@
+# Current Date and Time Report
+
+## UTC Date and Time
+**Current UTC Date:** {{ date.now }}
+**Current UTC Date (formatted):** {{ date.now | date.to_string "%Y-%m-%d" }}
+**Current UTC Time:** {{ date.now | date.to_string "%H:%M:%S" }}
+**Full UTC Timestamp:** {{ date.now | date.to_string "%Y-%m-%d %H:%M:%S UTC" }}
+
+## Date Format Examples
+- **ISO 8601:** {{ date.now | date.to_string "%Y-%m-%dT%H:%M:%SZ" }}
+- **Short Date:** {{ date.now | date.to_string "%m/%d/%Y" }}
+- **Long Format:** {{ date.now | date.to_string "%A, %B %d, %Y" }}
+- **Time Only (24h):** {{ date.now | date.to_string "%H:%M:%S" }}
+- **Time Only (12h):** {{ date.now | date.to_string "%I:%M:%S %p" }}
+
+## Unix Timestamp
+**Unix Timestamp (seconds):** {{ date.now | date.to_string "%s" }}
+
+## Year Information
+- **Year:** {{ date.now | date.to_string "%Y" }}
+- **Month:** {{ date.now | date.to_string "%m" }}
+- **Day:** {{ date.now | date.to_string "%d" }}
+- **Day of Week:** {{ date.now | date.to_string "%A" }}
+- **Day of Year:** {{ date.now | date.to_string "%j" }}
+
+---
+*Report generated at {{ date.now | date.to_string "%Y-%m-%d %H:%M:%S UTC" }}*
