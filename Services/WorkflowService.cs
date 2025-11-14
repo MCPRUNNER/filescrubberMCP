@@ -218,14 +218,9 @@ public class WorkflowService : IWorkflowService
                 var resolvedNested = new Dictionary<string, object>();
                 foreach (var nestedKvp in nestedDict)
                 {
-                    if (nestedKvp.Value is string nestedStr)
-                    {
-                        resolvedNested[nestedKvp.Key] = ResolvePlaceholders(nestedStr, context);
-                    }
-                    else
-                    {
-                        resolvedNested[nestedKvp.Key] = nestedKvp.Value;
-                    }
+                    resolvedNested[nestedKvp.Key] = nestedKvp.Value is string nestedStr
+                        ? ResolvePlaceholders(nestedStr, context)
+                        : nestedKvp.Value;
                 }
                 resolved[kvp.Key] = resolvedNested;
             }
