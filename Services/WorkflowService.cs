@@ -235,14 +235,9 @@ public class WorkflowService : IWorkflowService
                 var resolvedNested = new Dictionary<string, object>();
                 foreach (var prop in jobj.Properties())
                 {
-                    if (prop.Value is JValue jval && jval.Value is string nestedStr)
-                    {
-                        resolvedNested[prop.Name] = ResolvePlaceholders(nestedStr, context);
-                    }
-                    else
-                    {
-                        resolvedNested[prop.Name] = ((JToken)prop.Value).ToObject<object>() ?? prop.Value;
-                    }
+                    resolvedNested[prop.Name] = (prop.Value is JValue jval && jval.Value is string nestedStr)
+                        ? ResolvePlaceholders(nestedStr, context)
+                        : prop.Value;
                 }
                 resolved[kvp.Key] = resolvedNested;
             }
