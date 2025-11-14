@@ -212,6 +212,40 @@ public class WorkflowService : IWorkflowService
                 var resolvedValue = ResolvePlaceholders(strValue, context);
                 resolved[kvp.Key] = resolvedValue;
             }
+            else if (kvp.Value is Dictionary<string, object> nestedDict)
+            {
+                // Recursively resolve nested dictionaries
+                var resolvedNested = new Dictionary<string, object>();
+                foreach (var nestedKvp in nestedDict)
+                {
+                    if (nestedKvp.Value is string nestedStr)
+                    {
+                        resolvedNested[nestedKvp.Key] = ResolvePlaceholders(nestedStr, context);
+                    }
+                    else
+                    {
+                        resolvedNested[nestedKvp.Key] = nestedKvp.Value;
+                    }
+                }
+                resolved[kvp.Key] = resolvedNested;
+            }
+            else if (kvp.Value is JObject jobj)
+            {
+                // Handle JSON.NET JObject (from deserialization)
+                var resolvedNested = new Dictionary<string, object>();
+                foreach (var prop in jobj.Properties())
+                {
+                    if (prop.Value is JValue jval && jval.Value is string nestedStr)
+                    {
+                        resolvedNested[prop.Name] = ResolvePlaceholders(nestedStr, context);
+                    }
+                    else
+                    {
+                        resolvedNested[prop.Name] = prop.Value;
+                    }
+                }
+                resolved[kvp.Key] = resolvedNested;
+            }
             else
             {
                 resolved[kvp.Key] = kvp.Value;
@@ -562,7 +596,35 @@ public class WorkflowService : IWorkflowService
         var xsltFilePath = GetRequiredParameter<string>(parameters, "xsltFilePath");
         var destinationFilePath = GetOptionalParameter<string>(parameters, "destinationFilePath");
 
-        var result = await Task.Run(() => _parserService.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationFilePath));
+        Dictionary<string, string>? xsltParameters = null;
+        if (parameters.TryGetValue("xsltParameters", out var xsltParamsObj) && xsltParamsObj != null)
+        {
+            _logger.LogInformation("Found xsltParameters object of type: {Type}", xsltParamsObj.GetType().Name);
+
+            if (xsltParamsObj is Dictionary<string, object> paramsDict)
+            {
+                xsltParameters = paramsDict.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value?.ToString()?.Trim() ?? string.Empty
+                );
+                _logger.LogInformation("Converted {Count} parameters from Dictionary<string, object>", xsltParameters.Count);
+                foreach (var kvp in xsltParameters)
+                {
+                    _logger.LogInformation("  Parameter: {Key} = '{Value}'", kvp.Key, kvp.Value);
+                }
+            }
+            else if (xsltParamsObj is string paramsJson)
+            {
+                xsltParameters = JsonConvert.DeserializeObject<Dictionary<string, string>>(paramsJson);
+                _logger.LogInformation("Deserialized {Count} parameters from JSON string", xsltParameters?.Count ?? 0);
+            }
+        }
+        else
+        {
+            _logger.LogInformation("No xsltParameters found in parameters dictionary");
+        }
+
+        var result = await Task.Run(() => _parserService.TransformXmlWithXslt(xmlFilePath, xsltFilePath, destinationFilePath, xsltParameters));
         return result ?? string.Empty;
     }
 

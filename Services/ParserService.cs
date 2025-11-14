@@ -280,11 +280,16 @@ public class ParserService : IParserService
             var xsltArgs = new XsltArgumentList();
             if (xsltParameters != null && xsltParameters.Count > 0)
             {
+                _logger.LogInformation("Adding {Count} XSLT parameters", xsltParameters.Count);
                 foreach (var param in xsltParameters)
                 {
                     xsltArgs.AddParam(param.Key, string.Empty, param.Value);
-                    _logger.LogDebug("Added XSLT parameter: {Key} = {Value}", param.Key, param.Value);
+                    _logger.LogInformation("Added XSLT parameter: {Key} = '{Value}'", param.Key, param.Value);
                 }
+            }
+            else
+            {
+                _logger.LogInformation("No XSLT parameters provided");
             }
 
             using var stringWriter = new StringWriter();

@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-16">
+    <title>Employee Report - Tech Solutions Inc</title>
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+          }
+          .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+          }
+          .report-info {
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 10px 20px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-size: 0.9em;
+          }
+          .company-info {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+          }
+          th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+          }
+          td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+          }
+          tr:hover {
+            background-color: #f0f0f0;
+          }
+          .engineering {
+            background-color: #e8f4f8;
+          }
+          .sales {
+            background-color: #f8e8e8;
+          }
+          .skills {
+            font-size: 0.9em;
+            color: #666;
+          }
+          .skill-tag {
+            display: inline-block;
+            background-color: #ecf0f1;
+            padding: 2px 8px;
+            margin: 2px;
+            border-radius: 3px;
+            font-size: 0.85em;
+          }
+        </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Direct Test Report</h1>
+      <div class="report-info"><strong>Report Generated:</strong>2025-11-14 TEST</div>
+    </div>
+    <div class="company-info">
+      <h2>Tech Solutions Inc</h2>
+      <p><strong>Founded:</strong>2010</p>
+      <p><strong>Headquarters:</strong>Seattle, 
+            WA98101, 
+            USA</p>
+      <p><strong>Total Employees:</strong>3</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Position</th>
+          <th>Salary</th>
+          <th>Skills</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="engineering">
+          <td>1</td>
+          <td><strong>Alice Smith</strong></td>
+          <td>Engineering</td>
+          <td>Senior Developer</td>
+          <td>$95,000</td>
+          <td class="skills"><span class="skill-tag">C#</span><span class="skill-tag">JavaScript</span><span class="skill-tag">SQL</span></td>
+        </tr>
+        <tr class="engineering">
+          <td>2</td>
+          <td><strong>Bob Johnson</strong></td>
+          <td>Engineering</td>
+          <td>DevOps Engineer</td>
+          <td>$85,000</td>
+          <td class="skills"><span class="skill-tag">Docker</span><span class="skill-tag">Kubernetes</span><span class="skill-tag">AWS</span></td>
+        </tr>
+        <tr class="sales">
+          <td>3</td>
+          <td><strong>Carol Williams</strong></td>
+          <td>Sales</td>
+          <td>Account Manager</td>
+          <td>$75,000</td>
+          <td class="skills"><span class="skill-tag">Negotiation</span><span class="skill-tag">CRM</span><span class="skill-tag">Communication</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="company-info" style="margin-top: 20px;">
+      <h3>Department Summary</h3>
+      <p><strong>Engineering:</strong>2 employees
+          </p>
+      <p><strong>Sales:</strong>1 employees
+          </p>
+      <p><strong>Average Salary:</strong> 
+            $85,000</p>
+    </div>
+    <div class="company-info" style="margin-top: 20px; text-align: center; font-size: 0.85em; color: #7f8c8d;">
+      <p>Report generated on 2025-11-14 TEST | Tech Solutions Inc</p>
+    </div>
+  </body>
+</html>
