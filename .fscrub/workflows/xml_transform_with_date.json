@@ -1,0 +1,28 @@
+{
+    "Steps": [
+        {
+            "Name": "ExtractFormattedDate",
+            "Type": "#fscrub_scriban_render_template",
+            "Parameters": {
+                "templateFilePath": "Examples/extract_date.sbn",
+                "jsonData": "{}"
+            },
+            "Enabled": true,
+            "Output": {"Name": "CurrentDate", "Format": "String"}
+        },
+        {
+            "Name": "TransformXmlWithDate",
+            "Type": "#fscrub_parser_transform_xml",
+            "Parameters": {
+                "xmlFilePath": "Examples/medium.xml",
+                "xsltFilePath": "Examples/employee_report_with_date.xslt",
+                "destinationFilePath": "Output/employee_report_dated.html",
+                "xsltParameters": {
+                    "reportDate": "{ExtractFormattedDate.CurrentDate}",
+                    "reportTitle": "Employee Directory Report - Generated via Workflow"
+                }
+            },
+            "Enabled": true
+        }
+    ]
+}

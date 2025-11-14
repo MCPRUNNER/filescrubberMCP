@@ -33,5 +33,5 @@ public interface IParserTools
     /// <summary>
     /// Transforms an XML file using an XSLT stylesheet
     /// </summary>
-    Task<string> TransformXml(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null);
+    Task<string> TransformXml(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null, Dictionary<string, string>? xsltParameters = null);
 }

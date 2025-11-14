@@ -59,6 +59,7 @@ public interface IParserService
     /// <param name="xmlFilePath">The path to the XML file to transform</param>
     /// <param name="xsltFilePath">The path to the XSLT stylesheet file</param>
     /// <param name="destinationFilePath">Optional path to save the transformed XML</param>
+    /// <param name="xsltParameters">Optional dictionary of XSLT parameters to pass to the transformation</param>
     /// <returns>The transformed XML as a string, or null if an error occurs</returns>
-    string? TransformXmlWithXslt(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null);
+    string? TransformXmlWithXslt(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null, Dictionary<string, string>? xsltParameters = null);
 }
