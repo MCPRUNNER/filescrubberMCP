@@ -1,6 +1,6 @@
 # filescrubberMCP (MCP Server)
 
-A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 9 with support for HTTP and Stdio transports.
+A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 10 with support for HTTP and Stdio transports.
 
 ## Notice
 
@@ -41,7 +41,7 @@ This project is currently in active development and may undergo significant chan
 
 ### Architecture
 
-Built on **.NET 9** with a clean, modular architecture:
+Built on **.NET 10** with a clean, modular architecture:
 
 - **Service Layer**: Business logic for file, parser, template, and URI operations
 - **Tools Layer**: MCP tool implementations exposing services to AI models
@@ -101,8 +101,10 @@ Execute complex multi-step workflows with data flow between steps:
 
 ### Prerequisites
 
-- .NET 9.0 SDK or later
+- .NET 10.0 SDK or later
 - Windows, Linux, or macOS
+
+> **Note**: Upgrading from .NET 9? See the [Migration Guide](Documents/MIGRATION_TO_NET10.md) for detailed upgrade instructions.
 
 ### Installation
 
@@ -566,7 +568,7 @@ See `Tests/TEMPLATE_TESTS_SUMMARY.md` for detailed test coverage.
 
 ### Core
 
-- .NET 9.0
+- .NET 10.0
 - ModelContextProtocol.AspNetCore (0.1.0-preview.13)
 
 ### Logging
