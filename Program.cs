@@ -183,7 +183,7 @@ app.Lifetime.ApplicationStarted.Register(() => Log.Information("Template MCP Ser
 if (transportType.Equals("Stdio", StringComparison.OrdinalIgnoreCase))
 {
     // In stdio mode, we only want to use the MCP server transport
-    var mcpServer = app.Services.GetRequiredService<ModelContextProtocol.Server.IMcpServer>();
+    var mcpServer = app.Services.GetRequiredService<ModelContextProtocol.Server.McpServer>();
     await mcpServer.RunAsync(CancellationToken.None);
 }
 else
