@@ -33,7 +33,7 @@ jobs:
         run: |
           # Generate version string and updates README.md
           VER="$(git branch --show-current)-$(date +'%Y%m%d%H%M%S')"
-          cat Documents/README.md | sed -i "s|_VER_|$VER|g" > README.md
+          sed "s|_VER_|$VER|g" Documents/README.md > README.md
 
 
       - name: Configure Git user
