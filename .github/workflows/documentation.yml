@@ -48,8 +48,12 @@ jobs:
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.ACTION_PAT }}@github.com/${{ github.repository }}.git
           git add .
-          git commit -m "Auto-generated Version Update: $VER"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-generated Version Update: $VER"
+            git push
+          fi
         env:
           VER: ${{ env.VER }}
 
