@@ -35,6 +35,7 @@ jobs:
         run: |
           # Generate version string and updates README.md
           VER="$(git branch --show-current)-$(date +'%Y%m%d%H%M%S')"
+          echo "VER=$VER" >> $GITHUB_ENV
           sed "s|_VER_|$VER|g" Documents/README_TEMPLATE.md > README.md
 
 
@@ -49,6 +50,8 @@ jobs:
           git add .
           git commit -m "Auto-generated Version Update: $VER"
           git push
+        env:
+          VER: ${{ env.VER }}
 
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
