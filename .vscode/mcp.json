@@ -1,4 +1,11 @@
-{
+{"inputs": [
+    {
+      "id": "mssql-server-mcp-api-key",
+      "type": "promptString",
+      "description": "Enter your SQL Server MCP API Key",
+      "password": true
+    }
+  ],
   "servers": {
     "filescrubberStdioMCP": {
       "command": "dotnet",
@@ -18,6 +25,12 @@
       "headers": {
         "Content-Type": "application/json, text/event-stream",
         "Accept": "application/json, text/event-stream"
+      }
+    },"sql-server-mcp": {
+      "url": "http://localhost:3001/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:mssql-server-mcp-api-key}",
+        "Content-Type": "application/json"
       }
     }
   }
