@@ -11,7 +11,7 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -28,12 +28,14 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACTION_PAT }}
 
       - name: Make changes to a file
         run: |
           # Generate version string and updates README.md
           VER="$(git branch --show-current)-$(date +'%Y%m%d%H%M%S')"
-          sed "s|_VER_|$VER|g" Documents/README.md > README.md
+          sed "s|_VER_|$VER|g" Documents/README_TEMPLATE.md > README.md
 
 
       - name: Configure Git user
@@ -43,6 +45,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          git remote set-url origin https://x-access-token:${{ secrets.ACTION_PAT }}@github.com/${{ github.repository }}.git
           git add .
           git commit -m "Auto-generated Version Update: $VER"
           git push
