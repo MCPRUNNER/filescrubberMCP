@@ -31,9 +31,10 @@ jobs:
 
       - name: Make changes to a file
         run: |
+          # Generate version string and updates README.md
           VER="$(git branch --show-current)-$(date +'%Y%m%d%H%M%S')"
           cat Documents/README.md | sed -i "s|_VER_|$VER|g" > README.md
-          # Or any script that modifies files (e.g., Python, Node.js)
+
 
       - name: Configure Git user
         run: |
