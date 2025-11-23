@@ -1,7 +1,7 @@
-# filescrubberMCP (MCP Server) main-20251123000900
+# filescrubberMCP (MCP Server) 1.0.0.1
 
 A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 10 with support for HTTP and Stdio transports.
-TEST2
+TEST3a
 
 ## Notice
 
