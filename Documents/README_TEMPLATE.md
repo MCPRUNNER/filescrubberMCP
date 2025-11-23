@@ -1,7 +1,6 @@
 # filescrubberMCP (MCP Server) _VER_
 
 A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 10 with support for HTTP and Stdio transports.
-TEST3a
 
 ## Notice
 
@@ -180,7 +179,7 @@ Or use the provided PowerShell scripts:
 
 - `FILESCRUBBER_MCP_TRANSPORT` - Set to `"Http"` or `"Stdio"` (default: `"Http"`)
 - `FILESCRUBBER_MCP_LOG_DIR` - Custom directory for log files (default: `Logs` in application directory)
-- `FILESCRUBBER_MCP_ROOT_DIR` - Root directory for file operations. When set, all relative file paths will be resolved relative to this directory. Useful for Docker deployments to set a working directory. (default: current working directory)
+- `FILESCRUBBER_FILE_DIRECTORY` - Root directory for file operations. When set, all relative file paths will be resolved relative to this directory. Useful for Docker deployments to set a working directory. (default: current working directory)
 
 ## MCP Tools
 

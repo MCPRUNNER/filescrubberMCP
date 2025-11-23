@@ -115,7 +115,7 @@ public class ParserTools : IParserTools
     /// <summary>
     /// Searches for values in an XML file using XPath queries
     /// </summary>
-    [McpServerTool(Name = "fscrub_parser_search_xml"), Description("Searches for values in an XML file using XPath queries and returns the matching XML nodes or values.")]
+    [McpServerTool(Name = "fscrub_parser_search_xml"), Description("Searches for values in an XML file using XPath 1.0 queries and returns the matching XML nodes or values.")]
     public async Task<string> SearchXml(string xmlFilePath, string xPath, bool indented = true, bool showKeyPaths = false)
     {
         try
@@ -241,7 +241,7 @@ public class ParserTools : IParserTools
     /// <summary>
     /// Transforms an XML file using an XSLT stylesheet
     /// </summary>
-    [McpServerTool(Name = "fscrub_parser_transform_xml"), Description("Transforms an XML file using an XSLT stylesheet and returns the transformed XML. Optionally saves to a destination file and accepts XSLT parameters.")]
+    [McpServerTool(Name = "fscrub_parser_transform_xml"), Description("Transforms an XML file using an XSLT 1.0 stylesheet and returns the transformed XML. Optionally saves to a destination file and accepts XSLT parameters.")]
     public async Task<string> TransformXml(string xmlFilePath, string xsltFilePath, string? destinationFilePath = null, Dictionary<string, string>? xsltParameters = null)
     {
         try

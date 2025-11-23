@@ -1,7 +1,7 @@
 ## Build results
 bin/
 obj/
-
+Logs/
 ## User-specific files
 *.suo
 *.user
