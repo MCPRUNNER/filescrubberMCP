@@ -26,10 +26,13 @@ jobs:
   commit-changes:
     runs-on: ubuntu-latest
     steps:
-      - name: Output GitHub Info
-        run: |
-          echo "GitHub Info: ${{ toJSON(github) }}" > github_context.json 
-          cat github_context.json
+      - name: Output GitHub Info (safe) 
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const githubInfo = JSON.stringify(github.repos, null, 2)
+            core.summary.addRaw("### GitHub Info\njson\n" + githubInfo + "\n\n")
+            await core.summary.write()
 
 
       - name: Check out repository code
