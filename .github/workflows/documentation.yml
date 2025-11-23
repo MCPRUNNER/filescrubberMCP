@@ -29,6 +29,7 @@ jobs:
       - name: Output GitHub Info
         run: |
           echo "GitHub Info: ${{ toJSON(github) }}" >> $GITHUB_STEP_SUMMARY
+          echo $GITHUB_STEP_SUMMARY
 
       - name: Check out repository code
         uses: actions/checkout@v4
