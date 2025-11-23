@@ -31,6 +31,9 @@ jobs:
         with:
           token: ${{ secrets.ACTION_PAT }}
 
+      - name: Install xmlstarlet
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
       - name: Make changes to a file
         run: |
           # Generate version string and updates README.md
