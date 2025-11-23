@@ -34,7 +34,7 @@ jobs:
       - name: Make changes to a file
         run: |
           # Generate version string and updates README.md
-          VER="$(git branch --show-current)-$(date +'%Y%m%d%H%M%S')"
+          VER="$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" filescrubberMCP.csproj)"
           echo "VER=$VER" >> $GITHUB_ENV
           sed "s|_VER_|$VER|g" Documents/README_TEMPLATE.md > README.md
 
