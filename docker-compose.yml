@@ -10,7 +10,7 @@ services:
     environment:
       - TEMPLATE_MCP_TRANSPORT=Http
       - ASPNETCORE_URLS=http://+:3001
-      - FILESCRUBBER_MCP_ROOT_DIR=/app/Data
+      - FILESCRUBBER_FILE_DIRECTORY=/app/Data
     volumes:
       - ./data:/app/Data
       - ./logs:/app/Logs

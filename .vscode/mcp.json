@@ -1,4 +1,5 @@
-{"inputs": [
+{
+  "inputs": [
     {
       "id": "mssql-server-mcp-api-key",
       "type": "promptString",
@@ -16,7 +17,9 @@
         "c:\\Users\\U00001\\source\\repos\\MCP\\filescrubberMCP\\filescrubberMCP.csproj"
       ],
       "env": {
-        "FILESCRUBBER_MCP_TRANSPORT": "Stdio"
+        "FILESCRUBBER_MCP_TRANSPORT": "Stdio",
+        "FILESCRUBBER_FILE_DIRECTORY": "C:\\Users\\U00001\\source\\repos\\MCP\\filescrubberMCP",
+        "FILESCRUBBER_MCP_LOG_DIR": "C:\\Users\\U00001\\source\\repos\\MCP\\filescrubberMCP\\Logs"
       }
     },
     "filescrubberMCP": {
@@ -26,7 +29,8 @@
         "Content-Type": "application/json, text/event-stream",
         "Accept": "application/json, text/event-stream"
       }
-    },"sql-server-mcp": {
+    },
+    "sql-server-mcp": {
       "url": "http://localhost:3001/mcp",
       "headers": {
         "Authorization": "Bearer ${input:mssql-server-mcp-api-key}",

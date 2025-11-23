@@ -26,7 +26,7 @@ public class AppConfigurationProvider : IAppConfigurationProvider
         _logger = logger;
 
         // Get root directory from environment variable or use current directory
-        _rootDirectory = Environment.GetEnvironmentVariable("FILESCRUBBER_MCP_ROOT_DIR")
+        _rootDirectory = Environment.GetEnvironmentVariable("FILESCRUBBER_FILE_DIRECTORY")
                         ?? Directory.GetCurrentDirectory();
 
         _logger.LogInformation("Root directory configured as: {RootDirectory}", _rootDirectory);

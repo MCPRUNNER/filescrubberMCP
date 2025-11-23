@@ -24,7 +24,7 @@ if (!Directory.Exists(logsDirectory))
 // Get transport type from environment variable
 var transportType = Environment.GetEnvironmentVariable("FILESCRUBBER_MCP_TRANSPORT") ?? "Http";
 
-// Note: FILESCRUBBER_MCP_ROOT_DIR is read by AppConfigurationProvider for file operations root directory
+// Note: FILESCRUBBER_FILE_DIRECTORY is read by AppConfigurationProvider for file operations root directory
 
 // Configure Serilog using the logging configuration service
 var loggingConfigService = new LoggingConfigurationService();
