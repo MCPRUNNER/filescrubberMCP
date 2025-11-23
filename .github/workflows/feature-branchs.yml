@@ -29,6 +29,6 @@ jobs:
     steps:
       - name: Output GitHub Info
         run: |
-          echo "GitHub Info: ${{ toJSON(github) }}"
+          echo "GitHub Info: ${{ toJSON(github) }}" >> $GITHUB_STEP_SUMMARY
 
    
