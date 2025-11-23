@@ -26,6 +26,10 @@ jobs:
   commit-changes:
     runs-on: ubuntu-latest
     steps:
+      - name: Output GitHub Info
+        run: |
+          echo "GitHub Info: ${{ toJSON(github) }}"
+
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
