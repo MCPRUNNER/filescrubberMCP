@@ -43,7 +43,7 @@ jobs:
       - name: Install xmlstarlet
         run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
-      - name: Make changes to a file
+      - name: Update README with version
         run: |
           # Generate version string and updates README.md
           VER="$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" filescrubberMCP.csproj)"
