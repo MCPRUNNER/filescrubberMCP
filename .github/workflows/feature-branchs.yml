@@ -17,6 +17,14 @@ permissions:
   id-token: write
 
 jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output GitHub Info (safe) 
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
   # First job: Update documentation/version
   build:
     runs-on: ubuntu-latest
