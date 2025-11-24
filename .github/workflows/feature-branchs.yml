@@ -16,23 +16,18 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "features"
-  cancel-in-progress: true
-
 jobs:
   # First job: Update documentation/version
-  commit-changes:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Output GitHub Info (safe) 
-        uses: actions/github-script@v6
+      - uses: actions/checkout@v5.0.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5.0.0
         with:
-          script: |
-            const githubInfo = JSON.stringify(github.repos, null, 2)
-            core.summary.addRaw("### GitHub Info\njson\n" + githubInfo + "\n\n")
-            await core.summary.write()
-
-   
+          dotnet-version: 10.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+  
