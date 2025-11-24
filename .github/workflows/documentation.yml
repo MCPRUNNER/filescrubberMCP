@@ -23,8 +23,17 @@ concurrency:
 
 jobs:
   # First job: Update documentation/version
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output GitHub Info (safe) 
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
   commit-changes:
     runs-on: ubuntu-latest
+    needs: info
     steps:
       - name: Output GitHub Info (safe) 
         uses: actions/github-script@v6
