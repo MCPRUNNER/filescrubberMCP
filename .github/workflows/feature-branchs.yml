@@ -2,8 +2,11 @@
 name: Feature Branch Updates
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
+  # Runs after feature-CodeSL.yml completes successfully
+  workflow_run:
+    workflows: ["CodeQL Advanced"]
+    types:
+      - completed
     branches:
       - f-*
 
@@ -18,6 +21,7 @@ permissions:
 
 jobs:
   info:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Output GitHub Info (safe) 
@@ -27,6 +31,7 @@ jobs:
           echo "SHA: ${{ github.sha }}"
   # First job: Update documentation/version
   build:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     needs: info
     steps:
@@ -41,6 +46,7 @@ jobs:
         run: dotnet build --no-restore
 
   test:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     needs: build
     steps:
