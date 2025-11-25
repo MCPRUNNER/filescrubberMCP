@@ -2,9 +2,11 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: [ "main" ]
+  pull_request:
+    types:
+      - closed
+    branches: ["main"]
+ 
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,12 +26,9 @@ concurrency:
 jobs:
   # First job: Update documentation/version
   commit-changes:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Output GitHub Info
-        run: |
-          echo "GitHub Info: ${{ toJSON(github) }}"
-
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
@@ -38,7 +37,7 @@ jobs:
       - name: Install xmlstarlet
         run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
-      - name: Make changes to a file
+      - name: Update README with version
         run: |
           # Generate version string and updates README.md
           VER="$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" filescrubberMCP.csproj)"
@@ -66,6 +65,7 @@ jobs:
 
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
+    if: github.event.pull_request.merged == true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
