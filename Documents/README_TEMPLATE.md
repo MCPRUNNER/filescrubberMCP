@@ -2,6 +2,8 @@
 
 A Model Context Protocol (MCP) server providing comprehensive file operations, parsing capabilities, and Scriban template processing. Built on .NET 10 with support for HTTP and Stdio transports.
 
+TEST 8
+
 ## Notice
 
 This project is currently in active development and may undergo significant changes. Features and APIs are subject to change, and breaking changes may occur in future releases. Use at your own discretion.
