@@ -84,10 +84,14 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  artifacts-upload:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: source-artifact
           # Upload entire repository
-          path: '.'
- 
+          path: filescrubberMCP
