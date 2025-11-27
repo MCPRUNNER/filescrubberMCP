@@ -25,7 +25,6 @@ jobs:
   
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
-    if: github.event.pull_request.merged == true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
