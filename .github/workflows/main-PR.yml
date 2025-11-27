@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   pull_request:
     types:
-      - opened
+      - closed
     branches: ["main"]
  
 
