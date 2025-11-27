@@ -59,6 +59,14 @@ jobs:
           fi
         env:
           VER: ${{ env.VER }}
+      - name: Show Repository Files
+        run: ls -ltR .
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-artifact
+          # Upload entire repository
+          path: .
 
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
@@ -82,14 +90,3 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  artifacts-upload:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: source-artifact
-          # Upload entire repository
-          path: filescrubberMCP
