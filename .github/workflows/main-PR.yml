@@ -1,5 +1,5 @@
 # Combined workflow for documentation updates and static content deployment to GitHub Pages
-name: Deploy static content to Pages
+name: PR-Deploy static content to Pages
 
 on:
   pull_request:
@@ -22,52 +22,7 @@ permissions:
 
 jobs:
   # First job: Update documentation/version
-  commit-changes:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ACTION_PAT }}
-
-      - name: Install xmlstarlet
-        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
-
-      - name: Update README with version
-        run: |
-          # Generate version string and updates README.md
-          VER="$(xmlstarlet sel -t -v "/Project/PropertyGroup/Version" filescrubberMCP.csproj)"
-          echo "VER=$VER" >> $GITHUB_ENV
-          sed "s|_VER_|$VER|g" Documents/README_TEMPLATE.md > README.md
-
-
-      - name: Configure Git user
-        run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-      - name: Commit and push changes
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.ACTION_PAT }}@github.com/${{ github.repository }}.git
-          git add .
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto-generated Version Update: $VER"
-            git push
-          fi
-        env:
-          VER: ${{ env.VER }}
-      - name: Show Repository Files
-        run: ls -ltR .
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: source-artifact
-          # Upload entire repository
-          path: .
-
+  
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
     if: github.event.pull_request.merged == true
@@ -75,7 +30,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: commit-changes
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
