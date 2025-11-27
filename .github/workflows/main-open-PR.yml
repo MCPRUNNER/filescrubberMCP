@@ -2,11 +2,14 @@
 name: PR-Deploy static content to Pages
 
 on:
-
+  push:
+    branches: ["main"]
+    
   pull_request:
     types:
       - opened
-    branches: ["main"]
+    branches-ignore: 
+      - f-*
  
 
   # Allows you to run this workflow manually from the Actions tab
