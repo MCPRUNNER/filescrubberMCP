@@ -56,7 +56,7 @@ jobs:
       - name: Show Repository Files
         run: ls -ltR .
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: source-artifact
           # Upload entire repository
