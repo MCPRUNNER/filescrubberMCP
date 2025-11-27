@@ -4,12 +4,7 @@ name: PR-Deploy static content to Pages
 on:
   push:
     branches: ["main"]
-    
-  pull_request:
-    types:
-      - opened
-    branches-ignore: 
-      - f-*
+
  
 
   # Allows you to run this workflow manually from the Actions tab
@@ -29,7 +24,6 @@ jobs:
   
   # Second job: Deploy to GitHub Pages (runs after commit-changes)
   deploy:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
